@@ -6,4 +6,4 @@ window.addEventListener('DOMContentLoaded', () => {
 
 	['chrome', 'node', 'electron']
 		.forEach(dependency => replaceText(`${dependency}-version`, process.versions[dependency]));
-})
+});
