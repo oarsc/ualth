@@ -1,51 +1,18 @@
-const { app, BrowserWindow, ipcMain, globalShortcut } = require('electron');
-const path = require('path')
+const { app, ipcMain, globalShortcut } = require('electron');
+const path = require('path');
 
-function openSettings() {
-	const win = new BrowserWindow({
-		width: 800,
-		height: 600,
-		webPreferences: {
-			preload: path.join(__dirname, 'src/preload.js'),
-		},
-	});
+const { openLauncher, openSettings } = require('./src/window-definitions');
+const config = require('./src/config-load');
 
-	win.loadFile('view/settings.html');
-	return win;
-}
-
-function openLauncher() {
-	const win = new BrowserWindow({
-		width: 800,
-		height: 50,
-		frame: false,
-		//resizable: false,
-		center: true,
-		alwaysOnTop: true,
-		skipTaskbar: true,
-		autoHideMenuBar: true,
-		movable: false,
-		transparent: true,
-		webPreferences: {
-			preload: path.join(__dirname, 'src/launcher.js'),
-		},
-	});
-
-	// needed in some linux distributions
-	win.setSkipTaskbar(true);
-	win.setAlwaysOnTop(true);
-
-	win.loadFile('view/main.html');
-	return win;
-}
-
+// set hotkey
 app.whenReady().then(() => {
-    globalShortcut.register('Alt+Space', openLauncher);
+	globalShortcut.register(config.defaultHotkey, () => openLauncher());
 });
 
 // Do nothing when all windows are closed.
 app.on('window-all-closed', () => {});
 
+// set ipc events
 let settingsWindow;
 ipcMain.handle('open-settings', () => {
 	if (settingsWindow) {
@@ -57,6 +24,15 @@ ipcMain.handle('open-settings', () => {
 	settingsWindow.on('close', () => settingsWindow = undefined);
 });
 
+
 ipcMain.handle('quit-app', () => {
 	app.quit();
+});
+
+
+ipcMain.on('commands', (event, arg) => {
+	event.returnValue = config.commands;
+});
+ipcMain.on('replacer', (event, arg) => {
+	event.returnValue = config.replace;
 });
