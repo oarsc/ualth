@@ -1,0 +1,13 @@
+{
+	"defaultHotkey": "Alt+Space",
+	"replace": {
+		"gh": "github"
+	},
+	"commands": {
+		"exit": "_EXIT_",
+		"settings": "_SETTINGS_"
+	},
+	"searchEngines": {
+		"google": "https://www.google.es/search?q={q}"
+	}
+}
