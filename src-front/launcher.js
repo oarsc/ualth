@@ -1,19 +1,18 @@
 const { webFrame } = require('electron');
 const { perform, matches }  = require('./action-performer');
+const ANIMATION_TIME = 100;
 
 window.addEventListener('DOMContentLoaded', () => {
 	const form = document.getElementById('launcher-input')
 	const { action } = form;
 
 	form.onsubmit = ev => {
+		close();
 		ev.preventDefault();
 		perform(action.value);
-		window.top.close();
 	};
 
-	action.onblur = _ => {
-		window.top.close();
-	};
+	action.onblur = _ => close;
 
 	action.onkeydown = ev => {
 		if (ev.key == 'Escape') {
@@ -37,6 +36,7 @@ window.addEventListener('DOMContentLoaded', () => {
 		}
 	};
 
+	setVisible(true);
 	action.focus();
 
 
@@ -55,5 +55,15 @@ window.addEventListener('DOMContentLoaded', () => {
 			return action.value;
 		}
 		return action.value.substr(0,selectionStart);
+	}
+
+	function close() {
+		setVisible(false).then(() => window.top.close())
+	}
+
+	function setVisible(value) {
+		const opacityValue = value? 1 : 0;
+		return action.animate({opacity:opacityValue}, ANIMATION_TIME).finished
+			.then(() => action.style.opacity=opacityValue);
 	}
 });
