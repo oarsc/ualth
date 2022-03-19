@@ -1,24 +1,18 @@
-const { app } = require('electron');
-const { commands, replace : replacer } = require('./config-load');
+const { commands } = require('./config-load');
 const pluginLoader = require('./plugin/loader');
 
 module.exports.perform = (inputValue) => {
 	const [keyword, ...args] = splitInput(inputValue);
-
 	const action = commands[keyword];
 
-	if (action !== undefined) {
+	if (action)
 		performAction(action, args);
-	}
 }
 
 function performAction(action, args) {
-	if (action === '_EXIT_')
-		app.quit();
-
-	else if (action.type) {
+	if (action.type) {
 		const plugin = pluginLoader.findByType(action.type);
-		plugin.perform(action, args, replacer);
+		plugin.perform(action, args);
 	}
 }
 

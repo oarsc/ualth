@@ -18,13 +18,8 @@ if (!fs.existsSync(CONFIG_PATH)) {
 
 if (fs.existsSync(CONFIG_PATH)) {
 	const content = fs.readFileSync(CONFIG_PATH, 'utf-8');
-	module.exports = joinCommands(JSON.parse(content));
+	module.exports = pluginLoader.load(JSON.parse(content));
 
 } else {
 	throw new Error(`Couldn't read config file: ${CONFIG_PATH}`);
-}
-
-
-function joinCommands(content) {
-	return pluginLoader.load(content);
 }

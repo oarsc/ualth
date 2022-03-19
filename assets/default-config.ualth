@@ -3,7 +3,7 @@
 	"replace": {
 		"gh": "github"
 	},
-	"commands": {
+	"internalCommands": {
 		"exit": "_EXIT_"
 	},
 	"searchEngines": {

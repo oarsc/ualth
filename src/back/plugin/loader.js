@@ -1,10 +1,15 @@
-const plugins =[
-	'./search-engine'
-].map(v => require(v));
+const plugins =['internal', 'search-engine']
+	.map(name => require(`./plugin-${name}`))
+	.map(pluginClass => new pluginClass());
 
 module.exports = {
 	load(config) {
-		plugins.forEach(plugin => plugin.load(config));
+		config.commands = config.commands ?? {};
+
+		plugins.forEach(plugin => {
+			plugin.setConfig(config);
+			plugin.load(config);
+		});
 		return config;
 	},
 
