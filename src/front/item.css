@@ -1,0 +1,29 @@
+.item {
+	width: calc(100vw - 30px);
+	height: 40px;
+	margin: 0;
+	border: 0;
+	padding: 0 15px;
+	font-size: 20px;
+
+	background-color: #333;
+	color: #efefef;
+
+	display: flex;
+	justify-content: center;
+	align-content: center;
+	flex-direction: column;
+}
+
+.item.selected {
+	background-color: #3e3e3e;
+}
+
+.item:hover {
+	cursor: pointer;
+	background-color: #444;
+}
+
+.item:first-child {
+	border-top: 1px solid #4a4a4a;
+}

@@ -1,3 +1,9 @@
 body {
 	margin: 0;
+	font-family: Arial;
+}
+
+#app {
+	border-radius: 6px;
+	overflow: hidden;
 }

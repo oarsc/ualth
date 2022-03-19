@@ -1,7 +1,7 @@
 const homedir = require('os').homedir();
 const path = require('path');
 const fs = require('fs');
-//const pluginLoader = require('./plugin/loader');
+const pluginLoader = require('./plugin/loader');
 
 const CONFIG_PATH = path.join(homedir, '.ualthrc');
 
@@ -26,6 +26,5 @@ if (fs.existsSync(CONFIG_PATH)) {
 
 
 function joinCommands(content) {
-	return content;
-	//return pluginLoader.load(content);
+	return pluginLoader.load(content);
 }

@@ -4,8 +4,7 @@
 		"gh": "github"
 	},
 	"commands": {
-		"exit": "_EXIT_",
-		"settings": "_SETTINGS_"
+		"exit": "_EXIT_"
 	},
 	"searchEngines": {
 		"google": "https://www.google.es/search?q={q}"

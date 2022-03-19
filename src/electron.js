@@ -1,9 +1,9 @@
 const { app, BrowserWindow, ipcMain, globalShortcut } = require("electron");
-
 const path = require("path");
 const isDev = require("electron-is-dev");
 
-const config = require('./back/config-load');
+const { defaultHotkey, commands } = require('./back/config-load');
+const { perform } = require('./back/action-performer');
 
 // Conditionally include the dev tools installer to load React Dev Tools
 let installExtension, REACT_DEVELOPER_TOOLS;
@@ -23,7 +23,7 @@ function createWindow() {
 	// Create the browser window.
 	const win = new BrowserWindow({
 		width: 800,
-		height: 50,
+		height: 200,
 		frame: false,
 		resizable: false,
 		center: true,
@@ -53,10 +53,9 @@ function createWindow() {
 			: `file://${path.join(__dirname, "../build/index.html")}`
 	);
 
-  // Open the DevTools.
-	if (isDev) {
-		//win.webContents.openDevTools({ mode: "detach" });
-	}
+	//if (isDev) {
+	//	win.webContents.openDevTools({ mode: "detach" });
+	//}
 
 	return win;
 }
@@ -66,13 +65,13 @@ function createWindow() {
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
 	const win = createWindow();
-	globalShortcut.register(config.defaultHotkey, () => {
+	globalShortcut.register(defaultHotkey, () => {
 		win.show();
 		win.webContents.send('show');
 	});
-	ipcMain.on('hide', (event, arg) => {
-		win.hide();
-	});
+	ipcMain.on('hide',     (event, arg) => win.hide());
+	ipcMain.on('commands', (event, arg) => event.returnValue = commands);
+	ipcMain.on('perform',  (event, arg) => perform(arg));
 });
 
 // Quit when all windows are closed, except on macOS. There, it's common

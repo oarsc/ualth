@@ -3,16 +3,21 @@ const { contextBridge, ipcRenderer } = require('electron');
 // Expose protected methods that allow the renderer process to use
 // the ipcRenderer without exposing the entire object
 contextBridge.exposeInMainWorld(
-	'api', {
+	'ipcRenderer', {
 		send: (channel, data) => {
-			// whitelist channels
-			let validChannels = ['hide'];
+			const validChannels = ['hide', 'perform'];
 			if (validChannels.includes(channel)) {
 				ipcRenderer.send(channel, data);
 			}
 		},
+		sendSync: (channel, data) => {
+			const validChannels = ['commands'];
+			if (validChannels.includes(channel)) {
+				return ipcRenderer.sendSync(channel, data);
+			}
+		},
 		receive: (channel, func) => {
-			let validChannels = ['show'];
+			const validChannels = ['show'];
 			if (validChannels.includes(channel)) {
 				// Deliberately strip event as it includes `sender` 
 				ipcRenderer.on(channel, (event, ...args) => func(...args));

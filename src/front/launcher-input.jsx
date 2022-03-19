@@ -3,7 +3,7 @@ import './launcher-input.css';
 
 class InputLauncher extends React.Component {
 	onSubmit = ev => {
-		ev.preventDefault();
+		this.props.onSubmit(ev.target.action.value, ev);
 	}
 
 	onBlur = () => {
@@ -13,14 +13,47 @@ class InputLauncher extends React.Component {
 	onKeyDown = ev => {
 		if (ev.code === 'Escape') {
 			this.props.hideApp();
-		}
-		if (ev.code === 'Tab') {
 			ev.preventDefault();
+
+		} else if (ev.code === 'Tab') {
+			ev.preventDefault();
+
+		} else {
+			let funcName = false;
+			if (ev.code === 'ArrowUp')
+				funcName = 'findAndSelectPrevItem';
+			else if (ev.code === 'ArrowDown')
+				funcName = 'findAndSelectNextItem';
+
+			if (funcName) {
+				ev.preventDefault();
+				const item = this.props[funcName]();
+				if (item) {
+
+					const value = (({ selectionStart, selectionEnd, value }) =>
+						selectionStart === selectionEnd
+							? value
+							: value.substr(0,selectionStart)
+					)(ev.target);
+
+					this.loadAutocomplete(value, item);
+				}
+			}
 		}
 	}
 
 	onKeyPress = ev => {
-		this.loadAutocomplete(ev.target.value, ev.target.value+'__');
+		const { selectionStart, value } = ev.target;
+		if (value) {
+			if (ev.nativeEvent.inputType === 'deleteContentBackward' || selectionStart !== value.length) {
+				this.props.loadItems(value);
+
+			} else {
+				const firstItem = this.props.loadItems(value, 0);
+				if (firstItem)
+					this.loadAutocomplete(value, firstItem);
+			}
+		}
 	}
 
 	loadAutocomplete = (nonSelected, fullText) => {
