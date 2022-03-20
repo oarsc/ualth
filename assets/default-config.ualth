@@ -9,7 +9,11 @@
 	"internalCommands": {
 		"exit": "_EXIT_"
 	},
-	"searchEngines": {
-		"google": "https://www.google.es/search?q={q}"
-	}
+	"searchEngines": [
+		{
+			"key": "google",
+			"title": "Search with Google",
+			"url": "https://www.google.es/search?q={q}"
+		}
+	]
 }

@@ -1,9 +1,13 @@
 const { commands } = require('./config-load');
 const pluginLoader = require('./plugin/loader');
 
-module.exports.match = text => {
+module.exports.match = inputText => {
 	return commands
 		.filter(command => {
+			const text = command.requiresParams
+				? inputText.split(' ')[0]
+				: inputText;
+
 			const key = command.key;
 			if (command.caseInsensitive) {
 				return key.toLowerCase().indexOf(text.toLowerCase()) >= 0;
@@ -12,8 +16,8 @@ module.exports.match = text => {
 			}
 		})
 		.sort((co1, co2) => {
-			const is1 = keyStartsWith(co1, text);
-			const is2 = keyStartsWith(co2, text);
+			const is1 = keyStartsWith(co1, inputText);
+			const is2 = keyStartsWith(co2, inputText);
 			return is1? (is2? 0 : -1) : (is2? 1 : 0);
 		});
 }
@@ -21,7 +25,7 @@ module.exports.match = text => {
 module.exports.perform = inputValue => {
 	const [ keyword, ...args ] = splitInput(inputValue);
 	const [ action ] = commands
-		.filter(command => command.requiresParams && command.key == keyword);
+		.filter(command => command.requiresParams && command.key == keyword && args.length);
 
 	if (action) {
 		performAction(action, args);
@@ -42,7 +46,11 @@ module.exports.performId = id => {
 }
 
 
-function keyStartsWith(command, key) {
+function keyStartsWith(command, inputText) {
+	const key = command.requiresParams
+		? inputText.split(' ')[0]
+		: inputText;
+
 	return command.caseInsensitive
 		? command.key.toLowerCase().indexOf(key.toLowerCase()) === 0
 		: command.key.indexOf(key) === 0;

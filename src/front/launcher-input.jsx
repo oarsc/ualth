@@ -8,11 +8,13 @@ class InputLauncher extends React.Component {
 
 	onKeyDown = ev => {
 		if (ev.code === 'Escape') {
-			this.props.hideApp();
 			ev.preventDefault();
+			this.props.hideApp();
 
 		} else if (ev.code === 'Tab') {
 			ev.preventDefault();
+			ev.target.selectionStart = ev.target.selectionEnd;
+			this.onKeyPress(ev);
 
 		} else {
 			let funcName = false;
@@ -41,12 +43,12 @@ class InputLauncher extends React.Component {
 	onKeyPress = ev => {
 		const { selectionStart, value } = ev.target;
 		if (value) {
-			if (ev.nativeEvent.inputType === 'deleteContentBackward' || selectionStart !== value.length) {
+			if (selectionStart !== value.length) {
 				this.props.loadItems(value);
 
 			} else {
 				const firstItem = this.props.loadItems(value, 0);
-				if (firstItem) {
+				if (firstItem && ev.nativeEvent.inputType !== 'deleteContentBackward') {
 					this.loadAutocomplete(value, firstItem.key);
 				}
 			}

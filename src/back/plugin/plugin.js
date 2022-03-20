@@ -11,11 +11,11 @@ class Plugin {
 
 		if (pluginConfigs) {
 			for (let k in pluginConfigs) {
-				const addStuff = fillerFunction(pluginConfigs[k]);
+				const addStuff = fillerFunction(pluginConfigs[k], k);
 
 				if (addStuff.length === undefined) {
 					addStuff.type = this.type;
-					addStuff.key = k;
+					if (!addStuff.key) addStuff.key = k;
 					commands.push(addStuff);
 
 				} else {

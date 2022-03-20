@@ -11,17 +11,19 @@ class Item extends React.Component {
 	}
 
 	scrollIntoView = () => {
-		this.selfRef.scrollIntoView({block: "center"});
+		this.selfRef.scrollIntoView({ block: 'center' });
 	}
 
 	render() {
+		const { item, selected } = this.props;
+
 		return (
 			<div
-				className={ classNames(['item', 'selected'], [1, this.props.selected]) }
+				className={ classNames(['item', 'selected', 'arguments'], [1, selected, item.requiresParams]) }
 				onClick={ this.onClick }
 				ref={ ref => this.selfRef = ref } >
 
-				{ this.props.item.key }
+				<span>{ item.title }</span>
 			</div>
 	    );
 	}

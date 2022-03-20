@@ -80,13 +80,18 @@ class App extends React.Component {
 		this.onSubmit(this.state.items[index], ev);
 	}
 
-	onSubmitForm = (action, ev) => {
+	onSubmitForm = (inputText, ev) => {
 		ev.preventDefault();
 
 		const { items, itemSelected } = this.state;
-		const result = itemSelected >= 0
+
+		const shouldSearchById = itemSelected >= 0
+			? !items[itemSelected].requiresParams
+			: false;
+
+		const result = shouldSearchById
 			? ipcRenderer.sendSync('performId', items[itemSelected].id)
-			: ipcRenderer.sendSync('perform', action);
+			: ipcRenderer.sendSync('perform', inputText);
 
 		if (result) this.hide();
 	}

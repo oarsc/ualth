@@ -7,7 +7,7 @@ class SearchEnginePlugin extends Plugin {
 
 	load() {
 		this.join((data) => ({
-			url: data,
+			... data,
 			id: `${this.type}_${data}`,
 			requiresParams: true,
 		}));

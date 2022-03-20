@@ -10,10 +10,12 @@ class FirefoxPlugin extends Plugin {
 	type = 'FIRBOO';
 
 	load() {
-		this.join((data, entry) => {
+		this.join((data) => {
 			const dir = data.replace('~', homedir);
 
 			return fs.readdirSync(dir)
+				.sort()
+				.slice(-1)
 				.flatMap(file => {
 					const fileBuffer = fs.readFileSync(dir+file);
 					const decompressedJson = jsonlz4(fileBuffer);
@@ -22,6 +24,7 @@ class FirefoxPlugin extends Plugin {
 				.filter(bm => bm.title)
 				.map(bm => ({
 					caseInsensitive: true,
+					title: bm.title,
 					key: bm.title,
 					url: bm.uri,
 					id: bm.guid
