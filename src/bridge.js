@@ -5,13 +5,13 @@ const { contextBridge, ipcRenderer } = require('electron');
 contextBridge.exposeInMainWorld(
 	'ipcRenderer', {
 		send: (channel, data) => {
-			const validChannels = ['hide', 'perform'];
+			const validChannels = ['hide'];
 			if (validChannels.includes(channel)) {
 				ipcRenderer.send(channel, data);
 			}
 		},
 		sendSync: (channel, data) => {
-			const validChannels = ['commands'];
+			const validChannels = ['find', 'perform', 'performId'];
 			if (validChannels.includes(channel)) {
 				return ipcRenderer.sendSync(channel, data);
 			}

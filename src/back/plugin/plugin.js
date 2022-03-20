@@ -11,10 +11,24 @@ class Plugin {
 
 		if (pluginConfigs) {
 			for (let k in pluginConfigs) {
-				commands[k] = {
-					type: this.type
-				};
-				fillerFunction(pluginConfigs[k], commands[k]);
+				const addStuff = fillerFunction(pluginConfigs[k]);
+
+				if (addStuff.length === undefined) {
+					addStuff.type = this.type;
+					addStuff.key = k;
+					commands.push(addStuff);
+
+				} else {
+					addStuff.forEach(subAddStuff => {
+						if (!subAddStuff.key) {
+							console.error(subAddStuff);
+							throw new Error("When plugin returns an array on load, it must contain a key value");
+						}
+						subAddStuff.type = this.type;
+						commands.push(subAddStuff);
+					})
+				}
+
 			}
 			delete this.config[this.keyName];
 		}

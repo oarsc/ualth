@@ -4,12 +4,18 @@ const plugins =['internal', 'search-engine']
 
 module.exports = {
 	load(config) {
-		config.commands = config.commands ?? {};
+		config.commands = config.commands ?? [];
 
 		plugins.forEach(plugin => {
 			plugin.setConfig(config);
-			plugin.load(config);
+			plugin.load();
 		});
+
+		// remove by id duplicated
+		const ids = [];
+		config.commands = config.commands
+			.filter(command => ids.indexOf(command.id) < 0? ids.push(command.id) : false);
+
 		return config;
 	},
 

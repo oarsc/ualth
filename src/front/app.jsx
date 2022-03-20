@@ -4,7 +4,6 @@ import InputLauncher from './launcher-input';
 import Item from './item';
 
 const ipcRenderer = window.ipcRenderer;
-const COMMANDS = ipcRenderer.sendSync('commands');
 
 class App extends React.Component {
 	constructor(props) {
@@ -33,9 +32,7 @@ class App extends React.Component {
 	}
 
 	loadItems = (text, select = -1) => {
-		const items = text.indexOf(' ') < 0
-			? Object.keys(COMMANDS).filter(key => key.indexOf(text) === 0)
-			: [];
+		const items = ipcRenderer.sendSync('find', text);
 
 		this.setState({ items: items, itemSelected: select });
 		if (select >= 0)
@@ -44,7 +41,7 @@ class App extends React.Component {
 
 	selectNext = ev => {
 		const { items, itemSelected } = this.state;
-		const nextSelect = itemSelected+1;
+		const nextSelect = itemSelected + 1;
 		if (items.length > nextSelect) {
 			this.setState({ itemSelected: nextSelect });
 			return items[nextSelect];
@@ -53,7 +50,7 @@ class App extends React.Component {
 	}
 	selectPrev = ev => {
 		const { items, itemSelected } = this.state;
-		const nextSelect = itemSelected-1;
+		const nextSelect = itemSelected - 1;
 		if (nextSelect >= 0) {
 			this.setState({ itemSelected: nextSelect });
 			return items[nextSelect];
@@ -66,10 +63,15 @@ class App extends React.Component {
 	}
 
 	onSubmit = (action, ev) => {
-		this.hide();
 		ev.preventDefault();
-		console.log(`PERFORM "${action}"`);
-		ipcRenderer.send('perform', action);
+
+		const { items, itemSelected } = this.state;
+		
+		const result = itemSelected >= 0
+			? ipcRenderer.sendSync('performId', items[itemSelected].id)
+			: ipcRenderer.sendSync('perform', action);
+
+		if (result) this.hide();
 	}
 
 	render() {
@@ -91,7 +93,7 @@ class App extends React.Component {
 							<Item
 								key={i}
 								index={i}
-								text={ item }
+								item={ item }
 								selected={ i === this.state.itemSelected }
 								onClick={ this.onClickedItem } />
 						)

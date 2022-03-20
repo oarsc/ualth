@@ -5,16 +5,18 @@ class SearchEnginePlugin extends Plugin {
 	keyName = 'searchEngines'
 	type = 'SEAENG';
 
-	load(config) {
-		this.join((data, entry) => {
-			entry.url = data;
-		});
+	load() {
+		this.join((data) => ({
+			url: data,
+			id: `${this.type}_${data}`,
+			requiresParams: true,
+		}));
 	}
 
 	perform(entry, args) {
 		this.replace(args);
 		const queryValue = encodeURIComponent(args.join(' '));
-		let result = entry.url.replace('{q}', queryValue);
+		const result = entry.url.replace('{q}', queryValue);
 		shell.openExternal(result);
 	}
 }

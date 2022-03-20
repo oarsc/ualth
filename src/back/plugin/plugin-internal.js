@@ -5,13 +5,14 @@ class SearchEnginePlugin extends Plugin {
 	keyName = 'internalCommands'
 	type = 'INT';
 
-	load(config) {
-		this.join((data, entry) => {
-			entry.command = data;
-		});
+	load() {
+		this.join((data) => ({
+			command: data,
+			id: `${this.type}_${data}`
+		}));
 	}
 
-	perform(entry, args) {
+	perform(entry) {
 		if (entry.command === '_EXIT_') {
 			app.quit();
 		}

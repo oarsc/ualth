@@ -13,7 +13,7 @@ class Item extends React.Component {
 	render() {
 		return (
 			<div className={ classNames(['item', 'selected'], [1, this.props.selected]) } onClick={ this.onClick }>
-				{ this.props.text }
+				{ this.props.item.key }
 			</div>
 	    );
 	}

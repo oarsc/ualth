@@ -36,7 +36,7 @@ class InputLauncher extends React.Component {
 							: value.substr(0,selectionStart)
 					)(ev.target);
 
-					this.loadAutocomplete(value, item);
+					this.loadAutocomplete(value, item.key);
 				}
 			}
 		}
@@ -50,15 +50,24 @@ class InputLauncher extends React.Component {
 
 			} else {
 				const firstItem = this.props.loadItems(value, 0);
-				if (firstItem)
-					this.loadAutocomplete(value, firstItem);
+				if (firstItem) {
+					this.loadAutocomplete(value, firstItem.key);
+				}
 			}
 		}
 	}
 
-	loadAutocomplete = (nonSelected, fullText) => {
-		this.input.value = fullText;
-		this.input.setSelectionRange(nonSelected.length, fullText.length);
+	loadAutocomplete(nonSelected, fullText) {
+		if (this.canAutocomplete(nonSelected, fullText)) {
+			this.input.value = nonSelected + fullText.substr(nonSelected.length);
+			this.input.setSelectionRange(nonSelected.length, fullText.length);
+		} else {
+			this.input.value = nonSelected;
+		}
+	}
+
+	canAutocomplete(nonSelected, fullText) {
+		return fullText.toLowerCase().indexOf(nonSelected.toLowerCase()) === 0;
 	}
 
 	render() {
