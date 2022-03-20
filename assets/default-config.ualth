@@ -3,6 +3,9 @@
 	"replace": {
 		"gh": "github"
 	},
+	"firefoxBookmarks": [
+		"~/.mozilla/firefox/i79r44y4.dev-edition-default/bookmarkbackups/"
+	],
 	"internalCommands": {
 		"exit": "_EXIT_"
 	},
