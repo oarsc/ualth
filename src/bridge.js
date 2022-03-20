@@ -5,7 +5,7 @@ const { contextBridge, ipcRenderer } = require('electron');
 contextBridge.exposeInMainWorld(
 	'ipcRenderer', {
 		send: (channel, data) => {
-			const validChannels = ['hide'];
+			const validChannels = ['hide', 'height'];
 			if (validChannels.includes(channel)) {
 				ipcRenderer.send(channel, data);
 			}
@@ -17,7 +17,7 @@ contextBridge.exposeInMainWorld(
 			}
 		},
 		receive: (channel, func) => {
-			const validChannels = ['show'];
+			const validChannels = ['show', 'blur'];
 			if (validChannels.includes(channel)) {
 				// Deliberately strip event as it includes `sender` 
 				ipcRenderer.on(channel, (event, ...args) => func(...args));

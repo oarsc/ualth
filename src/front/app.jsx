@@ -1,7 +1,7 @@
 import React from 'react';
 import './app.css';
 import InputLauncher from './launcher-input';
-import Item from './item';
+import ItemList from './item-list';
 
 const ipcRenderer = window.ipcRenderer;
 
@@ -22,8 +22,16 @@ class App extends React.Component {
 					items: [],
 					itemSelected: -1,
 				});
+				this.resizeWindow(0);
 			}
 		});
+
+		ipcRenderer.receive('blur', this.hide);
+	}
+
+	resizeWindow(numItems) {
+		const itemsHeight = 40 * Math.min(numItems, 11);
+		ipcRenderer.send('height', 50 + itemsHeight);
 	}
 
 	hide = () => {
@@ -31,11 +39,21 @@ class App extends React.Component {
 		ipcRenderer.send('hide');
 	}
 
+	clearItems = () => {
+		this.setState({
+			items: [],
+			itemSelected: -1,
+		});
+		this.resizeWindow(0);
+	}
+
 	loadItems = (text, select = -1) => {
 		const items = ipcRenderer.sendSync('find', text);
+		const canSelect = items.length > select;
 
-		this.setState({ items: items, itemSelected: select });
-		if (select >= 0)
+		this.resizeWindow(items.length);
+		this.setState({ items: items, itemSelected: canSelect? select : -1 });
+		if (canSelect && select >= 0)
 			return items[select];
 	}
 
@@ -62,11 +80,10 @@ class App extends React.Component {
 		this.onSubmit(this.state.items[index], ev);
 	}
 
-	onSubmit = (action, ev) => {
+	onSubmitForm = (action, ev) => {
 		ev.preventDefault();
 
 		const { items, itemSelected } = this.state;
-		
 		const result = itemSelected >= 0
 			? ipcRenderer.sendSync('performId', items[itemSelected].id)
 			: ipcRenderer.sendSync('perform', action);
@@ -83,22 +100,15 @@ class App extends React.Component {
 				<InputLauncher
 					hideApp={ this.hide }
 					loadItems={ this.loadItems }
+					clearItems={ this.clearItems }
 					findAndSelectNextItem={ this.selectNext }
 					findAndSelectPrevItem={ this.selectPrev }
-					onSubmit={ this.onSubmit } />
+					onSubmitForm={ this.onSubmitForm } />
 
-				<div id="items">
-					{
-						this.state.items.map((item, i) =>
-							<Item
-								key={i}
-								index={i}
-								item={ item }
-								selected={ i === this.state.itemSelected }
-								onClick={ this.onClickedItem } />
-						)
-					}
-				</div>
+				<ItemList
+					hideApp={ this.hide }
+					items={ this.state.items }
+					itemSelected={ this.state.itemSelected } />
 			</div>
 		);
 	}

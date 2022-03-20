@@ -21,7 +21,7 @@ module.exports.match = text => {
 module.exports.perform = inputValue => {
 	const [ keyword, ...args ] = splitInput(inputValue);
 	const [ action ] = commands
-		.filter(command => commands.requiresParams && command.key == keyword);
+		.filter(command => command.requiresParams && command.key == keyword);
 
 	if (action) {
 		performAction(action, args);
@@ -32,7 +32,7 @@ module.exports.perform = inputValue => {
 
 module.exports.performId = id => {
 	const [ action ] = commands
-		.filter(command => !commands.requiresParams && command.id === id)
+		.filter(command => !command.requiresParams && command.id === id)
 
 	if (action) {
 		performAction(action);

@@ -5,14 +5,22 @@ import { classNames } from './support';
 class Item extends React.Component {
 
 	onClick = ev => {
-		const { index, onClick } = this.props;
+		const { item, onClick } = this.props;
 		if (onClick)
-			onClick(index, ev);
+			onClick(item, ev);
+	}
+
+	scrollIntoView = () => {
+		this.selfRef.scrollIntoView({block: "center"});
 	}
 
 	render() {
 		return (
-			<div className={ classNames(['item', 'selected'], [1, this.props.selected]) } onClick={ this.onClick }>
+			<div
+				className={ classNames(['item', 'selected'], [1, this.props.selected]) }
+				onClick={ this.onClick }
+				ref={ ref => this.selfRef = ref } >
+
 				{ this.props.item.key }
 			</div>
 	    );

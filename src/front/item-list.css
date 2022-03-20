@@ -1,0 +1,7 @@
+#items > :first-child {
+	border-top: 1px solid #4a4a4a;
+}
+
+#items {
+	overflow: hidden auto;
+}

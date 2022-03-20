@@ -23,7 +23,7 @@ function createWindow() {
 	// Create the browser window.
 	const win = new BrowserWindow({
 		width: 800,
-		height: 200,
+		height: 50,
 		frame: false,
 		resizable: false,
 		center: true,
@@ -69,7 +69,11 @@ app.whenReady().then(() => {
 		win.show();
 		win.webContents.send('show');
 	});
+
+	win.on('blur', () => win.webContents.send('blur'));
+
 	ipcMain.on('hide',      (event, arg) => win.hide());
+	ipcMain.on('height',    (event, arg) => win.setBounds({ height: arg }));
 	ipcMain.on('perform',   (event, arg) => event.returnValue = perform(arg));
 	ipcMain.on('performId', (event, arg) => event.returnValue = performId(arg));
 	ipcMain.on('commands',  (event, arg) => event.returnValue = commands);

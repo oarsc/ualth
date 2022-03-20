@@ -3,11 +3,7 @@ import './launcher-input.css';
 
 class InputLauncher extends React.Component {
 	onSubmit = ev => {
-		this.props.onSubmit(ev.target.action.value, ev);
-	}
-
-	onBlur = () => {
-		this.props.hideApp();
+		this.props.onSubmitForm(ev.target.action.value, ev);
 	}
 
 	onKeyDown = ev => {
@@ -54,6 +50,8 @@ class InputLauncher extends React.Component {
 					this.loadAutocomplete(value, firstItem.key);
 				}
 			}
+		} else {
+			this.props.clearItems();
 		}
 	}
 
@@ -74,9 +72,9 @@ class InputLauncher extends React.Component {
 		return (
 			<form id="launcher-input" onSubmit={ this.onSubmit }>
 				<input autoFocus
+					id="input"
 					type="text"
 					name="action"
-					onBlur={ this.onBlur }
 					onChange={ this.onKeyPress }
 					onKeyDown={ this.onKeyDown }
 					ref={ input => this.input = input } />
