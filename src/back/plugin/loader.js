@@ -1,4 +1,4 @@
-const plugins =['internal', 'search-engine', 'firefox']
+const plugins =['search-engine', 'firefox', 'internal']
 	.map(name => require(`./plugin-${name}`))
 	.map(pluginClass => new pluginClass());
 
@@ -14,7 +14,7 @@ module.exports = {
 		// remove by id duplicated
 		const ids = [];
 		config.commands = config.commands
-			.filter(command => ids.indexOf(command.id) < 0? ids.push(command.id) : false);
+			.filter(commandDef => ids.indexOf(commandDef.id) < 0? ids.push(commandDef.id) : false);
 
 		return config;
 	},

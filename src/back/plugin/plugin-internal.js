@@ -6,7 +6,7 @@ class SearchEnginePlugin extends Plugin {
 	type = 'INT';
 
 	load() {
-		this.join((data, key) => ({
+		this.generateCommandDefinitions((data, key) => ({
 			command: data,
 			id: `${this.type}_${data}`,
 			title: key

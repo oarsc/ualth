@@ -8,9 +8,11 @@ const { shell } = require('electron');
 class FirefoxPlugin extends Plugin {
 	keyName = 'firefoxBookmarks'
 	type = 'FIRBOO';
+	caseInsensitive = true;
+	startWith = false;
 
 	load() {
-		this.join((data) => {
+		this.generateCommandDefinitions((data) => {
 			const dir = data.replace('~', homedir);
 
 			return fs.readdirSync(dir)
@@ -23,7 +25,6 @@ class FirefoxPlugin extends Plugin {
 				})
 				.filter(bm => bm.title)
 				.map(bm => ({
-					caseInsensitive: true,
 					title: bm.title,
 					key: bm.title,
 					url: bm.uri,

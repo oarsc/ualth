@@ -3,17 +3,9 @@ const pluginLoader = require('./plugin/loader');
 
 module.exports.match = inputText => {
 	return commands
-		.filter(command => {
-			const text = command.requiresParams
-				? inputText.split(' ')[0]
-				: inputText;
-
-			const key = command.key;
-			if (command.caseInsensitive) {
-				return key.toLowerCase().indexOf(text.toLowerCase()) >= 0;
-			} else {
-				return key.indexOf(text) === 0;
-			}
+		.filter(commandDef => {
+			const plugin = pluginLoader.findByType(commandDef.type);
+			return plugin.match(commandDef, inputText);
 		})
 		.sort((co1, co2) => {
 			const is1 = keyStartsWith(co1, inputText);
@@ -25,7 +17,7 @@ module.exports.match = inputText => {
 module.exports.perform = inputValue => {
 	const [ keyword, ...args ] = splitInput(inputValue);
 	const [ action ] = commands
-		.filter(command => command.requiresParams && command.key == keyword && args.length);
+		.filter(commandDef => commandDef.requiresParams && commandDef.key == keyword && args.length);
 
 	if (action) {
 		performAction(action, args);
@@ -36,7 +28,7 @@ module.exports.perform = inputValue => {
 
 module.exports.performId = id => {
 	const [ action ] = commands
-		.filter(command => !command.requiresParams && command.id === id)
+		.filter(commandDef => !commandDef.requiresParams && commandDef.id === id)
 
 	if (action) {
 		performAction(action);
@@ -46,14 +38,16 @@ module.exports.performId = id => {
 }
 
 
-function keyStartsWith(command, inputText) {
-	const key = command.requiresParams
+function keyStartsWith(commandDef, inputText) {
+	const plugin = pluginLoader.findByType(commandDef.type);
+
+	const key = commandDef.requiresParams
 		? inputText.split(' ')[0]
 		: inputText;
 
-	return command.caseInsensitive
-		? command.key.toLowerCase().indexOf(key.toLowerCase()) === 0
-		: command.key.indexOf(key) === 0;
+	return plugin.caseInsensitive
+		? commandDef.key.toLowerCase().indexOf(key.toLowerCase()) === 0
+		: commandDef.key.indexOf(key) === 0;
 }
 
 function performAction(action, args) {

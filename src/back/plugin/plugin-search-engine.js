@@ -6,9 +6,9 @@ class SearchEnginePlugin extends Plugin {
 	type = 'SEAENG';
 
 	load() {
-		this.join((data) => ({
+		this.generateCommandDefinitions((data) => ({
 			... data,
-			id: `${this.type}_${data}`,
+			id: `${this.type}_${data.key}`,
 			requiresParams: true,
 		}));
 	}
