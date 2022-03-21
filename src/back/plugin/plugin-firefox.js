@@ -21,7 +21,7 @@ class FirefoxPlugin extends Plugin {
 				.flatMap(file => {
 					const fileBuffer = fs.readFileSync(dir+file);
 					const decompressedJson = jsonlz4(fileBuffer);
-					return this.recollect(decompressedJson.children);
+					return recollect(decompressedJson.children);
 				})
 				.filter(bm => bm.title)
 				.map(bm => ({
@@ -36,13 +36,13 @@ class FirefoxPlugin extends Plugin {
 	perform(entry) {
 		shell.openExternal(entry.url);
 	}
+}
 
-	recollect(json) {
-		return [
-			...json.filter(j => j.type === 'text/x-moz-place'),
-			...json.filter(j => j.children).flatMap(j => this.recollect(j.children))
-		];
-	}
+function recollect(json) {
+	return [
+		...json.filter(j => j.type === 'text/x-moz-place'),
+		...json.filter(j => j.children).flatMap(j => recollect(j.children))
+	];
 }
 
 module.exports = FirefoxPlugin;

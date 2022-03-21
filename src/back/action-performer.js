@@ -1,5 +1,6 @@
 const { commands } = require('./config-load');
 const pluginLoader = require('./plugin/loader');
+const { paramsSplitter } = require('./common');
 
 module.exports.match = inputText => {
 	return commands
@@ -15,7 +16,10 @@ module.exports.match = inputText => {
 }
 
 module.exports.perform = inputValue => {
-	const [ keyword, ...args ] = splitInput(inputValue);
+	const firstSpace = inputValue.indexOf(' ');
+	const keyword = inputValue.slice(0, firstSpace);
+	const args = paramsSplitter(inputValue.slice(firstSpace).trim());
+
 	const [ action ] = commands
 		.filter(commandDef => commandDef.requiresParams && commandDef.key == keyword && args.length);
 
@@ -55,15 +59,4 @@ function performAction(action, args) {
 		const plugin = pluginLoader.findByType(action.type);
 		plugin.perform(action, args);
 	}
-}
-
-function splitInput(inputValue) {
-	const split = inputValue.split(' ');
-
-	if (split[split.length-1] === '') {
-		split.splice(-1);
-		split[split.length-1] = split[split.length-1]+' ';
-	}
-
-	return split.filter(a => a);
 }

@@ -16,5 +16,13 @@
 			"title": "Search with Google",
 			"url": "https://www.google.es/search?q={q}"
 		}
+	],
+	"runner": [
+		{
+			"key": "notify-test",
+			"command": "notify-send",
+			"arguments": "\"{0}\" \"{1:}\"",
+			"workingDir": "~/"
+		}
 	]
 }
