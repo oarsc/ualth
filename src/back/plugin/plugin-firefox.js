@@ -33,6 +33,18 @@ class FirefoxPlugin extends Plugin {
 		});
 	}
 
+	match(commandDef, inputText) {
+		if (commandDef.type !== this.type) {
+			return false;
+		}
+
+		const text = inputText.toLowerCase();
+		const key = commandDef.key.toLowerCase();
+		const url = commandDef.url.toLowerCase();
+
+		return key.indexOf(text) >= 0 || url.indexOf(text) >= 0;
+	}
+
 	perform(entry) {
 		shell.openExternal(entry.url);
 	}
