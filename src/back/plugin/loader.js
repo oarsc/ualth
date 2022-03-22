@@ -1,4 +1,4 @@
-const plugins =['search-engine', 'runner', 'firefox', 'internal']
+const plugins =['search-engine', 'runner', 'saver', 'firefox', 'internal']
 	.map(name => require(`./plugin-${name}`))
 	.map(pluginClass => new pluginClass());
 

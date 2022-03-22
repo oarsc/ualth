@@ -30,11 +30,11 @@ class Plugin {
 		if (!this.type || !this.keyName)
 			throw new Error('Could not load a plugin');
 
-		const { commands, [this.keyName] : pluginConfigs} = this.config;
+		const { commands, [this.keyName] : pluginConfig} = this.config;
 
-		if (pluginConfigs) {
-			for (let k in pluginConfigs) {
-				const commandDef = createCommandDef(pluginConfigs[k], k);
+		if (pluginConfig) {
+			for (let k in pluginConfig) {
+				const commandDef = createCommandDef(pluginConfig[k], k);
 
 				if (commandDef.length === undefined) {
 					commandDef.type = this.type;
