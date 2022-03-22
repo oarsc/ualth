@@ -1,4 +1,4 @@
-const { commands } = require('./config-load');
+const { commands, autocomplete } = require('./config-load');
 const pluginLoader = require('./plugin/loader');
 const { paramsSplitter } = require('./common');
 
@@ -39,6 +39,15 @@ module.exports.performId = id => {
 		return true;
 	}
 	return false;
+}
+
+module.exports.autocomplete = value => {
+	for (const autocompleteKey in autocomplete) {
+		if (autocompleteKey === value) {
+			return autocomplete[autocompleteKey];
+		}
+	}
+	return value;
 }
 
 

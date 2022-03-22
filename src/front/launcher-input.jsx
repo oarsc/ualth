@@ -1,6 +1,8 @@
 import React from 'react';
 import './launcher-input.css';
 
+const ipcRenderer = window.ipcRenderer;
+
 class InputLauncher extends React.Component {
 	onSubmit = ev => {
 		this.props.onSubmitForm(ev.target.action.value, ev);
@@ -13,6 +15,12 @@ class InputLauncher extends React.Component {
 
 		} else if (ev.code === 'Tab') {
 			ev.preventDefault();
+
+			const words = ev.target.value.split(' ');
+			const lastWord = ipcRenderer.sendSync('autocomplete', words.splice(-1)[0]);
+			words.push(lastWord);
+
+			ev.target.value = words.join(' ');
 			ev.target.selectionStart = ev.target.selectionEnd;
 			this.onKeyPress(ev);
 

@@ -3,7 +3,7 @@ const path = require("path");
 const isDev = require("electron-is-dev");
 
 const { defaultHotkey, commands } = require('./back/config-load');
-const { perform, performId, match } = require('./back/action-performer');
+const { perform, performId, match, autocomplete } = require('./back/action-performer');
 
 // Conditionally include the dev tools installer to load React Dev Tools
 let installExtension, REACT_DEVELOPER_TOOLS;
@@ -72,12 +72,13 @@ app.whenReady().then(() => {
 
 	win.on('blur', () => win.webContents.send('blur'));
 
-	ipcMain.on('hide',      (event, arg) => win.hide());
-	ipcMain.on('height',    (event, arg) => win.setBounds({ height: arg }));
-	ipcMain.on('perform',   (event, arg) => event.returnValue = perform(arg));
-	ipcMain.on('performId', (event, arg) => event.returnValue = performId(arg));
-	ipcMain.on('commands',  (event, arg) => event.returnValue = commands);
-	ipcMain.on('find',      (event, arg) => event.returnValue = match(arg));
+	ipcMain.on('hide',         (event, arg) => win.hide());
+	ipcMain.on('height',       (event, arg) => win.setBounds({ height: arg }));
+	ipcMain.on('perform',      (event, arg) => event.returnValue = perform(arg));
+	ipcMain.on('performId',    (event, arg) => event.returnValue = performId(arg));
+	ipcMain.on('commands',     (event, arg) => event.returnValue = commands);
+	ipcMain.on('autocomplete', (event, arg) => event.returnValue = autocomplete(arg));
+	ipcMain.on('find',         (event, arg) => event.returnValue = match(arg));
 });
 
 // Quit when all windows are closed, except on macOS. There, it's common

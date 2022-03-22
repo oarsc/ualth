@@ -14,7 +14,6 @@ class SearchEnginePlugin extends Plugin {
 	}
 
 	perform(entry, args) {
-		this.replace(args);
 		const queryValue = encodeURIComponent(args.join(' '));
 		const result = entry.url.replace('{q}', queryValue);
 		shell.openExternal(result);

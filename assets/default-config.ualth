@@ -1,6 +1,6 @@
 {
 	"defaultHotkey": "Alt+Space",
-	"replace": {
+	"autocomplete": {
 		"gh": "github"
 	},
 	"firefoxBookmarks": [

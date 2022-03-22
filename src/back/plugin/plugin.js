@@ -58,15 +58,6 @@ class Plugin {
 			delete this.config[this.keyName];
 		}
 	}
-
-	replace(args) {
-		for (const i in args) {
-			const repl = this.config.replace[args[i]];
-			if (repl) {
-				args[i] = repl;
-			}
-		}
-	}
 }
 
 module.exports = Plugin;
