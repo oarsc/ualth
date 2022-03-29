@@ -20,6 +20,7 @@ class SaverPlugin extends Plugin {
 				requiresParams: true,
 				type: this.type,
 				id: this.type,
+				icon: 'database',
 			});
 		}
 	}

@@ -10,6 +10,7 @@ class SearchEnginePlugin extends Plugin {
 			... data,
 			id: `${this.type}_${data.key}`,
 			requiresParams: true,
+			icon: data.icon || 'search-engine',
 		}));
 	}
 

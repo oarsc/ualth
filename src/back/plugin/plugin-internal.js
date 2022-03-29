@@ -14,7 +14,8 @@ class SearchEnginePlugin extends Plugin {
 		this.generateCommandDefinitions((data, key) => ({
 			command: data,
 			id: `${this.type}_${data}`,
-			title: LITERALS[data] ?? key
+			title: LITERALS[data] ?? key,
+			icon: 'ualth',
 		}));
 	}
 

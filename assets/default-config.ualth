@@ -18,7 +18,8 @@
 		{
 			"key": "google",
 			"title": "Search with Google",
-			"url": "https://www.google.es/search?q={q}"
+			"url": "https://www.google.es/search?q={q}",
+			"icon": "google"
 		}
 	],
 	"runner": [

@@ -15,6 +15,7 @@ class RunnerPlugin extends Plugin {
 			title: data.key,
 			id: `${this.type}_${data.key}`,
 			requiresParams: data.arguments?.match(PARAMS_REGEX)? true : false,
+			icon: data.icon || 'terminal',
 		}));
 	}
 

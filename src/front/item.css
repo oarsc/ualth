@@ -8,11 +8,12 @@
 	background-color: #333;
 	color: #ccc;
 	display: flex;
-	justify-content: center;
-	align-content: center;
-	flex-direction: column;
+	flex-direction: row;
 	white-space: nowrap;
 	user-select: none;
+	align-items: flex-start;
+	flex-wrap: wrap;
+	align-content: center;
 }
 
 .item.selected {
@@ -26,9 +27,24 @@
 
 .item.arguments span:after {
 	content: '+';
-    opacity: 0.4;
-    font-weight: bold;
-    font-size: 31px;
-    vertical-align: middle;
-    margin-left: 6px;
+	opacity: 0.4;
+	font-weight: bold;
+	font-size: 31px;
+	vertical-align: middle;
+	margin-left: 6px;
+}
+
+.item .item-line > * {
+	vertical-align: middle;
+}
+
+.item .icon {
+	display: inline-block;
+	margin-right: 15px;
+	width: 32px;
+	text-align: center;
+}
+
+.item .icon img {
+	max-width: 32px;
 }
