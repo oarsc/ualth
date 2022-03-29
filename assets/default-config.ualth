@@ -1,5 +1,9 @@
 {
 	"defaultHotkey": "Alt+Space",
+	"default": {
+		"command": "xdg-open",
+		"textEditorCommand": "subl"
+	},
 	"autocomplete": {
 		"gh": "github"
 	},
@@ -24,10 +28,11 @@
 	],
 	"runner": [
 		{
-			"key": "notify-test",
-			"command": "notify-send",
-			"arguments": "\"{0}\" \"{1:}\"",
-			"workingDir": "~/"
+			"key": "ualthrc",
+			"command": "__DEFAULT_TEXT_EDITOR__",
+			"arguments": ".ualthrc",
+			"workingDir": "~/",
+			"icon": "ualth"
 		}
 	]
 }

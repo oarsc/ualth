@@ -30,7 +30,7 @@ class RunnerPlugin extends Plugin {
 			? resolveArguments(entry.arguments, args)
 			: entry.arguments;
 
-		spawn(entry.command, paramsSplitter(params), options);
+		spawn(this.cleanCommand(entry.command), paramsSplitter(params), options);
 	}
 }
 

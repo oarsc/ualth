@@ -58,6 +58,12 @@ class Plugin {
 			delete this.config[this.keyName];
 		}
 	}
+
+	cleanCommand(command) {
+		if (command === '__DEFAULT__')             return this.config.default.command;
+		if (command === '__DEFAULT_TEXT_EDITOR__') return this.config.default.textEditorCommand;
+		return command;
+	}
 }
 
 module.exports = Plugin;

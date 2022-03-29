@@ -1,7 +1,8 @@
 const Plugin = require('./plugin');
 const homedir = require('os').homedir();
 const fs = require('fs');
-const { clipboard, shell } = require('electron')
+const { clipboard } = require('electron');
+const { spawn } = require("child_process");
 
 class SaverPlugin extends Plugin {
 	keyName = 'infoSaver'
@@ -27,7 +28,7 @@ class SaverPlugin extends Plugin {
 
 	perform(entry, [ key, ... value ]) {
 		if (key === 'edit') {
-			shell.openPath(this.fileName);
+			spawn(this.cleanCommand('__DEFAULT__'), [ this.fileName ]);
 
 		} else if (key === 'reload') {
 			this.loadFile();
