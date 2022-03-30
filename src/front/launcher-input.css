@@ -8,8 +8,15 @@
 
 	background-color: #333;
 	color: #efefef;
+
+	border-radius: 6px;
+	overflow: hidden;
+	position: fixed;
+	top: 0;
 }
 
-#launcher-input input:focus {
-	outline-width: 0;
+.itemed #launcher-input input {
+	border-radius: 6px 6px 0 0;
+	border-bottom: 1px solid #5a5a5a;
+	z-index: 1;
 }

@@ -4,7 +4,6 @@ body {
 	overflow: hidden;
 }
 
-#app {
-	border-radius: 6px;
-	overflow: hidden;
+input:focus {
+	outline-width: 0;
 }

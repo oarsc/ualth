@@ -1,7 +1,5 @@
-#items > :first-child {
-	border-top: 1px solid #4a4a4a;
-}
-
 #items {
 	overflow: hidden auto;
+	margin-top: 51px;
+	border-radius: 0 0 6px 6px;
 }

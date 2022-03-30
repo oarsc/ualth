@@ -1,6 +1,7 @@
 import React from 'react';
 import './item-list.css';
 import Item from './item';
+import { NUM_VISIBLE_ITEMS, ITEM_HEIGHT } from './constants-conf';
 
 const ipcRenderer = window.ipcRenderer;
 
@@ -18,7 +19,7 @@ class ItemList extends React.Component {
 
 	render() {
 		return (
-			<div id="items" style={{ height: `${Math.min(this.props.items.length, 11) * 40 + 1}px` }}>
+			<div id="items" style={{ height: `${Math.min(this.props.items.length, NUM_VISIBLE_ITEMS) * ITEM_HEIGHT}px` }}>
 				{
 					this.props.items.map((item, i) => {
 						const itemIsSelected = i === this.props.itemSelected;

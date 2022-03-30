@@ -39,10 +39,10 @@
 }
 
 .item .icon {
-	display: inline-block;
+	display: inline-flex;
 	margin-right: 15px;
 	width: 32px;
-	text-align: center;
+	justify-content: center;
 }
 
 .item .icon img {

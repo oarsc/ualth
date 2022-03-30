@@ -1,7 +1,9 @@
 import React from 'react';
-import './app.css';
 import InputLauncher from './launcher-input';
 import ItemList from './item-list';
+import { classNames } from './support';
+import { NUM_VISIBLE_ITEMS, INPUT_HEIGHT, ITEM_HEIGHT } from './constants-conf';
+import './app.css';
 
 const ipcRenderer = window.ipcRenderer;
 
@@ -30,20 +32,23 @@ class App extends React.Component {
 	}
 
 	resizeWindow(numItems) {
-		const itemsHeight = 40 * Math.min(numItems, 11);
-		ipcRenderer.send('height', 50 + itemsHeight);
+		let windowHeight = ITEM_HEIGHT * Math.min(numItems, NUM_VISIBLE_ITEMS) + INPUT_HEIGHT;
+		if (numItems > 0) windowHeight++;
+		ipcRenderer.send('height', windowHeight);
 	}
 
 	hide = () => {
-		this.setState({ visible: false });
 		ipcRenderer.send('hide');
+		this.clearItems(true);
 	}
 
-	clearItems = () => {
-		this.setState({
+	clearItems = (hide) => {
+		const newState = {
 			items: [],
 			itemSelected: -1,
-		});
+		};
+		if (hide) newState.visible = false;
+		this.setState(newState);
 		this.resizeWindow(0);
 	}
 
@@ -101,7 +106,7 @@ class App extends React.Component {
 			return <div/>;
 
 		return (
-			<div id="app">
+			<div id="app" className={ classNames('itemed', this.state.items.length) }>
 				<InputLauncher
 					hideApp={ this.hide }
 					loadItems={ this.loadItems }
