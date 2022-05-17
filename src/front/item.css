@@ -26,12 +26,12 @@
 }
 
 .item.arguments span:after {
-	content: '+';
-	opacity: 0.4;
+	content: '...';
+	opacity: 0.25;
 	font-weight: bold;
-	font-size: 31px;
+	font-size: 1.2em;
 	vertical-align: middle;
-	margin-left: 6px;
+	margin-left: 4px;
 }
 
 .item .item-line > * {
