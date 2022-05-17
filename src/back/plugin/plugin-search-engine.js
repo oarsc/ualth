@@ -5,6 +5,18 @@ class SearchEnginePlugin extends Plugin {
 	keyName = 'searchEngines'
 	type = 'SEAENG';
 
+	match(definition, inputText) {
+		if (definition.type !== this.type)
+			return false;
+
+		const [ key ] = definition.key.split(' ');
+		const [ value, params ] = inputText.split(' ');
+
+		return params === undefined
+			? key.indexOf(value) === 0
+			: key === value;
+	}
+
 	load() {
 		this.generateCommandDefinitions((data) => ({
 			... data,

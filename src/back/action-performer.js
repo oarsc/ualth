@@ -6,7 +6,7 @@ module.exports.match = inputText => {
 	return commands
 		.filter(commandDef => {
 			const plugin = pluginLoader.findByType(commandDef.type);
-			return plugin.match(commandDef, inputText);
+			return commandDef.type === plugin.type && plugin.match(commandDef, inputText);
 		})
 		.sort((co1, co2) => {
 			const is1 = keyStartsWith(co1, inputText);

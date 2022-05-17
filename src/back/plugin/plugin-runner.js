@@ -9,6 +9,20 @@ class RunnerPlugin extends Plugin {
 	keyName = 'runner'
 	type = 'RUN';
 
+	match(definition, inputText) {
+		if (definition.type !== this.type)
+			return false;
+
+		const [ key ] = definition.key.split(' ');
+		const [ value, params ] = definition.requiresParams
+			? inputText.split(' ')
+			: [ inputText ];
+
+		return params === undefined
+			? key.indexOf(value) === 0
+			: key === value;
+	}
+
 	load() {
 		this.generateCommandDefinitions((data) => ({
 			... data,

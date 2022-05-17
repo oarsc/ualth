@@ -6,27 +6,26 @@ class Plugin {
 		this.config = config;
 	}
 
-	match(commandDef, inputText) {
-		if (commandDef.type !== this.type) {
+	match(definition, inputText) {
+		if (definition.type !== this.type)
 			return false;
-		}
 
-		let key = commandDef.key;
-		let text = commandDef.requiresParams
+		let key = definition.key;
+		let value = definition.requiresParams
 			? inputText.split(' ')[0]
 			: inputText;
 
 		if (this.caseInsensitive) {
 			key = key.toLowerCase();
-			text = text.toLowerCase();
+			value = value.toLowerCase();
 		}
 
 		return this.startWith
-			? key.indexOf(text) === 0
-			: key.indexOf(text) >= 0;
+			? key.indexOf(value) === 0
+			: key.indexOf(value) >= 0;
 	}
 
-	generateCommandDefinitions(createCommandDef) {
+	generateCommandDefinitions(createDefinitionFunction) {
 		if (!this.type || !this.keyName)
 			throw new Error('Could not load a plugin');
 
@@ -34,23 +33,23 @@ class Plugin {
 
 		if (pluginConfig) {
 			for (let k in pluginConfig) {
-				const commandDef = createCommandDef(pluginConfig[k], k);
+				const definition = createDefinitionFunction(pluginConfig[k], k);
 
-				if (commandDef.length === undefined) {
-					commandDef.type = this.type;
-					commandDef.key = commandDef.key || k;
-					commandDef.startWith = commandDef.startWith ?? true;
-					commands.push(commandDef);
+				if (definition.length === undefined) {
+					definition.type = this.type;
+					definition.key = definition.key || k;
+					definition.startWith = definition.startWith ?? true;
+					commands.push(definition);
 
 				} else {
-					commandDef.forEach(subCommandDef => {
-						if (!subCommandDef.key) {
-							console.error(subCommandDef);
+					definition.forEach(subDefinition => {
+						if (!subDefinition.key) {
+							console.error(subDefinition);
 							throw new Error("When plugin returns an array on load, it must contain a key value");
 						}
-						subCommandDef.type = this.type;
-						subCommandDef.startWith = subCommandDef.startWith ?? true;
-						commands.push(subCommandDef);
+						subDefinition.type = this.type;
+						subDefinition.startWith = subDefinition.startWith ?? true;
+						commands.push(subDefinition);
 					})
 				}
 
