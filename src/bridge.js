@@ -4,16 +4,16 @@ const { contextBridge, ipcRenderer } = require('electron');
 // the ipcRenderer without exposing the entire object
 contextBridge.exposeInMainWorld(
 	'ipcRenderer', {
-		send: (channel, data) => {
+		send: (channel, ...data) => {
 			const validChannels = ['hide', 'height'];
 			if (validChannels.includes(channel)) {
-				ipcRenderer.send(channel, data);
+				ipcRenderer.send(channel, ...data);
 			}
 		},
-		sendSync: (channel, data) => {
-			const validChannels = ['find', 'perform', 'performId', 'autocomplete'];
+		sendSync: (channel, ...data) => {
+			const validChannels = ['find', 'perform', 'autocomplete'];
 			if (validChannels.includes(channel)) {
-				return ipcRenderer.sendSync(channel, data);
+				return ipcRenderer.sendSync(channel, ...data);
 			}
 		},
 		receive: (channel, func) => {

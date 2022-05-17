@@ -15,27 +15,11 @@ module.exports.match = inputText => {
 		});
 }
 
-module.exports.perform = inputValue => {
-	const firstSpace = inputValue.indexOf(' ');
-	const keyword = inputValue.slice(0, firstSpace);
-	const args = paramsSplitter(inputValue.slice(firstSpace).trim());
-
-	const [ action ] = commands
-		.filter(commandDef => commandDef.requiresParams && commandDef.key == keyword && args.length);
+module.exports.perform = (id, input) => {
+	const [ action ] = commands.filter(def => def.id === id)
 
 	if (action) {
-		performAction(action, args);
-		return true;
-	}
-	return false;
-}
-
-module.exports.performId = id => {
-	const [ action ] = commands
-		.filter(commandDef => !commandDef.requiresParams && commandDef.id === id)
-
-	if (action) {
-		performAction(action);
+		performAction(action, input.split(' ').slice(1));
 		return true;
 	}
 	return false;

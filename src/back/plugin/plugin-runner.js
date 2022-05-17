@@ -33,41 +33,45 @@ class RunnerPlugin extends Plugin {
 		}));
 	}
 
-	perform(entry, args) {
+	perform(entry, argsList) {
 		const options = { detached: true };
 
 		if (entry.workingDir) {
 			options.cwd = entry.workingDir.replace('~', homedir);
 		}
 
-		const params = entry.requiresParams
-			? resolveArguments(entry.arguments, args)
-			: entry.arguments;
+		const [command, params] = !entry.requiresParams
+			? [entry.command, entry.arguments]
+			: entry.singleCommand && !argsList.length
+				? [entry.singleCommand, '']
+				: [entry.command, resolveArguments(entry.arguments, argsList)];
 
-		spawn(this.cleanCommand(entry.command), paramsSplitter(params), options);
+		spawn(this.cleanCommand(command), paramsSplitter(params), options);
 	}
 }
 
 
-function resolveArguments(definition, userInput) {
-	return definition.match(PARAMS_REGEX)
+function resolveArguments(definition, argsList) {
+	return argsList.length == 0
+		? definition
+		: definition.match(PARAMS_REGEX)
 		.map(s => {
 			const range = s.slice(1, -1);
 
 			if (range === '*' ||  range === ':')
-				return [s, userInput.join(' ')];
+				return [s, argsList.join(' ')];
 
 			if (range.indexOf(':') < 0)
-				return [s, userInput[range]];
+				return [s, argsList[range]];
 
 			const [ firstIndex, secondIndex ] = range.split(':');
 
 			if (firstIndex) {
 				return secondIndex
-					? [s, userInput.slice(firstIndex, secondIndex).join(' ')]
-					: [s, userInput.slice(firstIndex).join(' ')]
+					? [s, argsList.slice(firstIndex, secondIndex).join(' ')]
+					: [s, argsList.slice(firstIndex).join(' ')]
 			} else if (secondIndex) {
-				return [s, userInput.slice(0, secondIndex).join(' ')]
+				return [s, argsList.slice(0, secondIndex).join(' ')]
 			}
 		})
 		.reduce((finalResult, [ initialValue, replacement ]) => 

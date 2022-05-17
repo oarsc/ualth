@@ -26,10 +26,15 @@ class SearchEnginePlugin extends Plugin {
 		}));
 	}
 
-	perform(entry, args) {
-		const queryValue = encodeURIComponent(args.join(' '));
-		const result = entry.url.replace('{q}', queryValue);
-		shell.openExternal(result);
+	perform(entry, argsList) {
+		if (entry.rootUrl && !argsList.length) {
+			shell.openExternal(entry.rootUrl);	
+
+		} else {
+			const queryValue = encodeURIComponent(argsList.join(' '));
+			const result = entry.url.replace('{q}', queryValue);
+			shell.openExternal(result);
+		}
 	}
 }
 

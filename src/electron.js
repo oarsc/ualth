@@ -72,11 +72,10 @@ app.whenReady().then(() => {
 
 	win.on('blur', () => win.webContents.send('blur'));
 
-	ipcMain.on('hide',         (event, arg) => win.hide());
+	ipcMain.on('hide',         (event) => win.hide());
 	ipcMain.on('height',       (event, arg) => win.setBounds({ height: arg }));
-	ipcMain.on('perform',      (event, arg) => event.returnValue = perform(arg));
-	ipcMain.on('performId',    (event, arg) => event.returnValue = performId(arg));
-	ipcMain.on('commands',     (event, arg) => event.returnValue = commands);
+	ipcMain.on('perform',      (event, arg, params) => event.returnValue = perform(arg, params));
+	ipcMain.on('commands',     (event) => event.returnValue = commands);
 	ipcMain.on('autocomplete', (event, arg) => event.returnValue = autocomplete(arg));
 	ipcMain.on('find',         (event, arg) => event.returnValue = match(arg));
 });

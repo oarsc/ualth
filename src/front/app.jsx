@@ -89,15 +89,7 @@ class App extends React.Component {
 		ev.preventDefault();
 
 		const { items, itemSelected } = this.state;
-
-		const shouldSearchById = itemSelected >= 0
-			? !items[itemSelected].requiresParams
-			: false;
-
-		const result = shouldSearchById
-			? ipcRenderer.sendSync('performId', items[itemSelected].id)
-			: ipcRenderer.sendSync('perform', inputText);
-
+		const result = ipcRenderer.sendSync('perform', items[itemSelected].id, inputText);
 		if (result) this.hide();
 	}
 
