@@ -39,6 +39,7 @@ class Plugin {
 					definition.type = this.type;
 					definition.key = definition.key || k;
 					definition.startWith = definition.startWith ?? true;
+					definition.id = Math.random();
 					commands.push(definition);
 
 				} else {
@@ -49,6 +50,7 @@ class Plugin {
 						}
 						subDefinition.type = this.type;
 						subDefinition.startWith = subDefinition.startWith ?? true;
+						subDefinition.id = Math.random();
 						commands.push(subDefinition);
 					})
 				}

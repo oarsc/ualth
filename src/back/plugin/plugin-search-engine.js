@@ -20,7 +20,7 @@ class SearchEnginePlugin extends Plugin {
 	load() {
 		this.generateCommandDefinitions((data) => ({
 			... data,
-			id: `${this.type}_${data.key}`,
+			//id: `${this.type}_${data.key}`,
 			requiresParams: true,
 			icon: data.icon || 'search-engine',
 		}));

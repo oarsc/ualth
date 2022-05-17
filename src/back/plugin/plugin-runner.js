@@ -27,7 +27,7 @@ class RunnerPlugin extends Plugin {
 		this.generateCommandDefinitions((data) => ({
 			... data,
 			title: data.key,
-			id: `${this.type}_${data.key}`,
+			//id: `${this.type}_${data.key}`,
 			requiresParams: data.arguments?.match(PARAMS_REGEX)? true : false,
 			icon: data.icon || 'terminal',
 		}));

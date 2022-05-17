@@ -28,7 +28,7 @@ class FirefoxPlugin extends Plugin {
 					title: bm.title,
 					key: bm.title,
 					url: bm.uri,
-					id: bm.guid,
+					//id: bm.guid,
 					icon: bm.icon || 'firefox',
 				}));
 		});

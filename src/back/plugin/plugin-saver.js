@@ -20,7 +20,7 @@ class SaverPlugin extends Plugin {
 				title: "Use ualth database",
 				requiresParams: true,
 				type: this.type,
-				id: this.type,
+				//id: this.type,
 				icon: 'database',
 			});
 		}

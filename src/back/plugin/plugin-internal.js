@@ -13,7 +13,7 @@ class SearchEnginePlugin extends Plugin {
 	load() {
 		this.generateCommandDefinitions((data, key) => ({
 			command: data,
-			id: `${this.type}_${data}`,
+			//id: `${this.type}_${data}`,
 			title: LITERALS[data] ?? key,
 			icon: 'ualth',
 		}));
