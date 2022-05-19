@@ -28,7 +28,7 @@ class SaverPlugin extends Plugin {
 
 	perform(entry, [ key, ... value ]) {
 		if (key === 'edit') {
-			spawn(this.cleanCommand('__DEFAULT__'), [ this.fileName ]);
+			spawn(this.cleanCommand('__DEFAULT_TEXT_EDITOR__'), [ this.fileName ]);
 
 		} else if (key === 'reload') {
 			this.loadFile();
