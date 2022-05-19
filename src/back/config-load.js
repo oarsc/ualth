@@ -1,7 +1,8 @@
 const homedir = require('os').homedir();
 const path = require('path');
 const fs = require('fs');
-const pluginLoader = require('./plugin/loader');
+const commandLoader = require('./command/loader');
+const Command = require('./command/command');
 
 const CONFIG_PATH = path.join(homedir, '.ualthrc');
 
@@ -17,8 +18,15 @@ if (!fs.existsSync(CONFIG_PATH)) {
 }
 
 if (fs.existsSync(CONFIG_PATH)) {
-	const content = fs.readFileSync(CONFIG_PATH, 'utf-8');
-	module.exports = pluginLoader.load(JSON.parse(content));
+	const config = JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf-8'));
+	const commands = commandLoader.load(config);
+
+	Command.setParams(config, commands);
+
+	module.exports = {
+		commands: commands,
+		config: config
+	}
 
 } else {
 	throw new Error(`Couldn't read config file: ${CONFIG_PATH}`);

@@ -25,11 +25,13 @@ class InputLauncher extends React.Component {
 			this.onKeyPress(ev);
 
 		} else {
-			let funcName = false;
-			if (ev.code === 'ArrowUp')
-				funcName = 'findAndSelectPrevItem';
-			else if (ev.code === 'ArrowDown')
-				funcName = 'findAndSelectNextItem';
+			const funcName = (code =>
+				code === 'ArrowUp'
+					? 'findAndSelectPrevItem'
+					: code === 'ArrowDown'
+						? 'findAndSelectNextItem'
+						: false
+				)(ev.code);
 
 			if (funcName) {
 				ev.preventDefault();
@@ -42,7 +44,7 @@ class InputLauncher extends React.Component {
 							: value.substr(0,selectionStart)
 					)(ev.target);
 
-					this.loadAutocomplete(value, item.key);
+					this.loadAutocomplete(value, item.keyword);
 				}
 			}
 		}
@@ -57,7 +59,7 @@ class InputLauncher extends React.Component {
 			} else {
 				const firstItem = this.props.loadItems(value, 0);
 				if (firstItem && ev.nativeEvent.inputType !== 'deleteContentBackward') {
-					this.loadAutocomplete(value, firstItem.key);
+					this.loadAutocomplete(value, firstItem.keyword);
 				}
 			}
 		} else {

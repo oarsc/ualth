@@ -2,7 +2,7 @@ const { app, BrowserWindow, ipcMain, globalShortcut } = require("electron");
 const path = require("path");
 const isDev = require("electron-is-dev");
 
-const { defaultHotkey, commands } = require('./back/config-load');
+const { config : { defaultHotkey } } = require('./back/config-load');
 const { perform, performId, match, autocomplete } = require('./back/action-performer');
 
 // Conditionally include the dev tools installer to load React Dev Tools
@@ -75,7 +75,6 @@ app.whenReady().then(() => {
 	ipcMain.on('hide',         (event) => win.hide());
 	ipcMain.on('height',       (event, arg) => win.setBounds({ height: arg }));
 	ipcMain.on('perform',      (event, arg, params) => event.returnValue = perform(arg, params));
-	ipcMain.on('commands',     (event) => event.returnValue = commands);
 	ipcMain.on('autocomplete', (event, arg) => event.returnValue = autocomplete(arg));
 	ipcMain.on('find',         (event, arg) => event.returnValue = match(arg));
 });

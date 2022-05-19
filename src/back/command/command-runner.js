@@ -1,50 +1,49 @@
-const Plugin = require('./plugin');
+const Command = require('./command');
 const homedir = require('os').homedir();
 const { spawn } = require("child_process");
 const { paramsSplitter } = require('../common');
 
 const PARAMS_REGEX = /\{(?:\*|\d+|\d*\:\d+|\d+\:)\}/g;
 
-class RunnerPlugin extends Plugin {
-	keyName = 'runner'
-	type = 'RUN';
+class RunnerCommand extends Command {
+	static label = 'runner';
 
-	match(definition, inputText) {
-		if (definition.type !== this.type)
-			return false;
+	constructor(data) {
+		super();
 
-		const [ key ] = definition.key.split(' ');
-		const [ value, params ] = definition.requiresParams
+		this.title = data.key;
+		this.keyword = data.key;
+		this.command = data.command;
+		this.singleCommand = data.singleCommand;
+		this.arguments = data.arguments;
+		this.workingDir = data.workingDir;
+		this.requiresParams = data.arguments?.match(PARAMS_REGEX)? true : false;
+		this.icon = data.icon || 'terminal';
+	}
+
+	match(inputText) {
+		const [ keyword ] = this.keyword.split(' ');
+		const [ value, params ] = this.requiresParams
 			? inputText.split(' ')
 			: [ inputText ];
 
 		return params === undefined
-			? key.indexOf(value) === 0
-			: key === value;
+			? keyword.indexOf(value) === 0
+			: keyword === value;
 	}
 
-	load() {
-		this.generateCommandDefinitions((data) => ({
-			... data,
-			title: data.key,
-			//id: `${this.type}_${data.key}`,
-			requiresParams: data.arguments?.match(PARAMS_REGEX)? true : false,
-			icon: data.icon || 'terminal',
-		}));
-	}
-
-	perform(entry, argsList) {
+	perform(argsList) {
 		const options = { detached: true };
 
-		if (entry.workingDir) {
-			options.cwd = entry.workingDir.replace('~', homedir);
+		if (this.workingDir) {
+			options.cwd = this.workingDir.replace('~', homedir);
 		}
 
-		const [command, params] = !entry.requiresParams
-			? [entry.command, entry.arguments]
-			: entry.singleCommand && !argsList.length
-				? [entry.singleCommand, '']
-				: [entry.command, resolveArguments(entry.arguments, argsList)];
+		const [command, params] = !this.requiresParams
+			? [this.command, this.arguments]
+			: this.singleCommand && !argsList.length
+				? [this.singleCommand, '']
+				: [this.command, resolveArguments(this.arguments, argsList)];
 
 		spawn(this.cleanCommand(command), paramsSplitter(params), options);
 	}
@@ -79,4 +78,4 @@ function resolveArguments(definition, argsList) {
 			definition);
 }
 
-module.exports = RunnerPlugin;
+module.exports = RunnerCommand;
