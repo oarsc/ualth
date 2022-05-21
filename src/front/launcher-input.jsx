@@ -17,7 +17,7 @@ class InputLauncher extends React.Component {
 			ev.preventDefault();
 
 			const words = ev.target.value.split(' ');
-			const lastWord = ipcRenderer.sendSync('autocomplete', words.splice(-1)[0]);
+			const lastWord = ipcRenderer.sendSync('resolve', words.splice(-1)[0]);
 			words.push(lastWord);
 
 			ev.target.value = words.join(' ');

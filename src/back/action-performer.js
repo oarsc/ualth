@@ -1,4 +1,4 @@
-const { config : { autocomplete} , commands } = require('./config-load');
+const { config : { resolve } , commands } = require('./config-load');
 const { paramsSplitter } = require('./common');
 
 module.exports.match = inputText => {
@@ -12,19 +12,18 @@ module.exports.match = inputText => {
 }
 
 module.exports.perform = (id, input) => {
-	const [ command ] = commands.filter(command => command.id === id)
+	const [ command ] = commands.filter(command => command.id === id);
 
 	if (command) {
-		command.perform(input.split(' ').slice(1))
-		return true;
+		command.perform(input.split(' ').slice(1));
+		return command;
 	}
-	return false;
 }
 
-module.exports.autocomplete = value => {
-	for (const autocompleteKey in autocomplete) {
-		if (autocompleteKey === value) {
-			return autocomplete[autocompleteKey];
+module.exports.resolve = value => {
+	for (const resolveKey in resolve) {
+		if (resolveKey === value) {
+			return resolve[resolveKey];
 		}
 	}
 	return value;

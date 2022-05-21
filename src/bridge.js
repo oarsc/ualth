@@ -11,7 +11,7 @@ contextBridge.exposeInMainWorld(
 			}
 		},
 		sendSync: (channel, ...data) => {
-			const validChannels = ['find', 'perform', 'autocomplete'];
+			const validChannels = ['find', 'perform', 'resolve'];
 			if (validChannels.includes(channel)) {
 				return ipcRenderer.sendSync(channel, ...data);
 			}

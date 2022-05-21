@@ -3,7 +3,7 @@ const path = require("path");
 const isDev = require("electron-is-dev");
 
 const { config : { defaultHotkey } } = require('./back/config-load');
-const { perform, performId, match, autocomplete } = require('./back/action-performer');
+const { perform, performId, match, resolve } = require('./back/action-performer');
 
 // Conditionally include the dev tools installer to load React Dev Tools
 let installExtension, REACT_DEVELOPER_TOOLS;
@@ -72,11 +72,11 @@ app.whenReady().then(() => {
 
 	win.on('blur', () => win.webContents.send('blur'));
 
-	ipcMain.on('hide',         (event) => win.hide());
-	ipcMain.on('height',       (event, arg) => win.setBounds({ height: arg }));
-	ipcMain.on('perform',      (event, arg, params) => event.returnValue = perform(arg, params));
-	ipcMain.on('autocomplete', (event, arg) => event.returnValue = autocomplete(arg));
-	ipcMain.on('find',         (event, arg) => event.returnValue = match(arg));
+	ipcMain.on('hide',    (event) => win.hide());
+	ipcMain.on('height',  (event, arg) => win.setBounds({ height: arg }));
+	ipcMain.on('perform', (event, arg, params) => event.returnValue = perform(arg, params));
+	ipcMain.on('resolve', (event, arg) => event.returnValue = resolve(arg));
+	ipcMain.on('find',    (event, arg) => event.returnValue = match(arg));
 });
 
 // Quit when all windows are closed, except on macOS. There, it's common

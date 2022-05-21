@@ -4,7 +4,7 @@
 		"command": "xdg-open",
 		"textEditorCommand": "subl"
 	},
-	"autocomplete": {
+	"resolve": {
 		"gh": "github"
 	},
 	"internalCommands": {
