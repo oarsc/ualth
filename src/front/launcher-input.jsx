@@ -46,6 +46,10 @@ class InputLauncher extends React.Component {
 
 					this.loadAutocomplete(value, item.keyword);
 				}
+			} else if (ev.key.length === 1 && !ev.ctrlKey) {
+				const { selectionStart, selectionEnd, value } = ev.target;
+				ev.target.value = value.substr(0,selectionStart) + value.substr(selectionEnd);
+				ev.target.selectionStart = ev.target.selectionEnd = selectionStart;
 			}
 		}
 	}

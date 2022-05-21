@@ -29,17 +29,17 @@ class SaverCommand extends Command {
 				case ACTION_DEFAULT:
 					this.keyword = MASTER_KEY;
 					this.requiresParams = true;
-					this.title = 'Use ualth database';
+					this.title = 'Save new database entry';
 					break;
 
 				case ACTION_EDIT:
 					this.keyword = `${MASTER_KEY} edit`;
-					this.title = 'Open ualth database with text editor';
+					this.title = 'Open database file';
 					break;
 
 				case ACTION_RELOAD:
 					this.keyword = `${MASTER_KEY} reload`;
-					this.title = 'Reloads ualth database';
+					this.title = 'Reloads database file';
 					break;
 			}
 		}
@@ -63,11 +63,14 @@ class SaverCommand extends Command {
 	}
 
 	match(inputText) {
-		//if (this.content)
-			return super.match(inputText);
+		const match = super.match(inputText);
+		if (match && this.action === ACTION_DEFAULT) {
+			const reservedWords = ['edit', 'reload'];
+			const regex = new RegExp( `^${MASTER_KEY} (${reservedWords.join('|')})($| )`, 'g' );
+			return !inputText.match(regex);
+		}
 
-		return ['edit', 'reload']
-			.some(reservedValue => inputText == `${MASTER_KEY} ${reservedValue}`)? false : super.match(inputText);
+		return match;
 	}
 
 	perform([ key, ... value ]) {
