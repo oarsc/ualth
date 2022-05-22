@@ -31,6 +31,10 @@ class Command {
 			? inputText.split(' ')[0]
 			: inputText;
 
+		if (!value.length) {
+			return false;
+		}
+
 		if (this.caseInsensitive) {
 			keyword = keyword.toLowerCase();
 			value = value.toLowerCase();
