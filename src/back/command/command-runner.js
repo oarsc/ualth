@@ -14,7 +14,7 @@ class RunnerCommand extends Command {
 		this.title = data.key;
 		this.keyword = data.key;
 		this.command = data.command;
-		this.singleCommand = data.singleCommand;
+		this.noParams = data.noParams;
 		this.arguments = data.arguments;
 		this.workingDir = data.workingDir;
 		this.requiresParams = data.arguments?.match(PARAMS_REGEX)? true : false;
@@ -39,11 +39,14 @@ class RunnerCommand extends Command {
 			options.cwd = this.workingDir.replace('~', homedir);
 		}
 
-		const [command, params] = !this.requiresParams
-			? [this.command, this.arguments]
-			: this.singleCommand && !argsList.length
-				? [this.singleCommand, '']
-				: [this.command, resolveArguments(this.arguments, argsList)];
+		const [command, params] = (({requiresParams, command, arguments:args, noParams}) => {
+			if (requiresParams) {
+				if (noParams && !argsList.length)
+					return [noParams.command, noParams.arguments ?? ''];
+				return [command, resolveArguments(args, argsList)];
+			}
+			return [command, args];
+		})(this);
 
 		spawn(this.cleanCommand(command), paramsSplitter(params), options);
 	}

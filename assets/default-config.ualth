@@ -33,6 +33,17 @@
 			"arguments": ".ualthrc",
 			"workingDir": "~/",
 			"icon": "ualth"
+		},
+		{
+			"key": "explorer",
+			"workingDir": "~/",
+			"command": "__DEFAULT__",
+			"arguments": "./{*}",
+			"noParams": {
+				"command": "__DEFAULT__",
+				"arguments": "."
+			}
+			"icon": "ualth"
 		}
 	]
 }
