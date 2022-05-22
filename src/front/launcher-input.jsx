@@ -58,7 +58,7 @@ class InputLauncher extends React.Component {
 		const { selectionStart, value } = ev.target;
 		if (value) {
 			if (selectionStart !== value.length) {
-				this.props.loadItems(value);
+				this.props.loadItems(value, 0);
 
 			} else {
 				const firstItem = this.props.loadItems(value, 0);
