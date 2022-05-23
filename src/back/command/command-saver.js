@@ -120,7 +120,11 @@ class SaverCommand extends Command {
 					existing.title = `Copies ${content}`;
 
 				} else {
-					const addIndexSlice = saverCommands.length-1;
+					const addIndexSlice = (aux => {
+						selfClass.addDefaultActions(aux);
+						return saverCommands.length - aux.length;
+					})([]);
+
 					const addIndex = commands.indexOf(saverCommands[addIndexSlice]);
 
 					const command = new selfClass([key, content]);
