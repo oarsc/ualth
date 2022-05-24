@@ -21,7 +21,7 @@ class SaverCommand extends Command {
 			this.keyword = `${MASTER_KEY} ${data[0]}`;
 			this.key = data[0];
 			this.content = data[1];
-			this.title = `Copies ${this.content}`;
+			this.title = `Copies ${this.key} content: "${this.content}"`;
 
 		} else {
 			this.action = data;
@@ -101,40 +101,62 @@ class SaverCommand extends Command {
 			});
 
 		} else if (this.action === ACTION_DEFAULT && value.length) {
+			if (value.length === 1 && value[0] === '!') {
+				this.getCommands(commands => {
+					const selfClass = this.constructor;
 
-			const content = value
-				.map(val => val.indexOf(' ') < 0 ? val : `"${val}"`)
-				.join(' ');
+					const saverCommands = commands
+						.filter(c => c instanceof selfClass);
 
-			this.getCommands(commands => {
-				const selfClass = this.constructor;
+					const removeIndexSlice = saverCommands
+						.findIndex(c => c.key == key);
 
-				const saverCommands = commands
-					.filter(c => c instanceof selfClass);
+					if (removeIndexSlice >= 0) {
+						const removeIndex = commands.indexOf(saverCommands[removeIndexSlice]);
 
-				const [ existing ] = saverCommands
-					.filter(c => c.key == key);
+						commands.splice(removeIndex, 1);
+						saverCommands.splice(removeIndexSlice, 1);
 
-				if (existing) {
-					existing.content = content;
-					existing.title = `Copies ${content}`;
+						this.saveFile(saverCommands);
+					}
 
-				} else {
-					const addIndexSlice = (aux => {
-						selfClass.addDefaultActions(aux);
-						return saverCommands.length - aux.length;
-					})([]);
+				});
 
-					const addIndex = commands.indexOf(saverCommands[addIndexSlice]);
+			} else {
+				const content = value
+					.map(val => val.indexOf(' ') < 0 ? val : `"${val}"`)
+					.join(' ');
 
-					const command = new selfClass([key, content]);
+				this.getCommands(commands => {
+					const selfClass = this.constructor;
 
-					commands.splice(addIndex, 0, command);
-					saverCommands.splice(addIndexSlice, 0, command);
-				}
+					const saverCommands = commands
+						.filter(c => c instanceof selfClass);
 
-				this.saveFile(saverCommands);
-			});
+					const [ existing ] = saverCommands
+						.filter(c => c.key == key);
+
+					if (existing) {
+						existing.content = content;
+						existing.title = `Copies ${existing.key} content: "${content}"`;
+
+					} else {
+						const addIndexSlice = (aux => {
+							selfClass.addDefaultActions(aux);
+							return saverCommands.length - aux.length;
+						})([]);
+
+						const addIndex = commands.indexOf(saverCommands[addIndexSlice]);
+
+						const command = new selfClass([key, content]);
+
+						commands.splice(addIndex, 0, command);
+						saverCommands.splice(addIndexSlice, 0, command);
+					}
+
+					this.saveFile(saverCommands);
+				});
+			}
 		}
 	}
 
