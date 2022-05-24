@@ -22,6 +22,14 @@ class Item extends React.Component {
 			? `./icons/${item.icon}.png`
 			: defaultIcon;
 
+		const title = item.title
+			.replace(/</gm, '&lt;')
+			.replace(/>/gm, '&gt;')
+			.replace(/{b}(.*?){\/b}/gm, '<b>$1</b>')
+			.replace(/{u}(.*?){\/u}/gm, '<u>$1</u>')
+			.replace(/{s}(.*?){\/s}/gm, '<s>$1</s>')
+			.replace(/{i}(.*?){\/i}/gm, '<i>$1</i>');
+
 		return (
 			<div
 				className={ classNames(['item', 'selected', 'arguments'], [1, selected, item.requiresParams]) }
@@ -32,7 +40,7 @@ class Item extends React.Component {
 					<div className='icon'>
 						<img src={ icon } alt=''/>
 					</div>
-					<span>{ item.title }</span>
+					<span dangerouslySetInnerHTML={{__html: title}}></span>
 				</div>
 
 			</div>
