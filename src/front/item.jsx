@@ -18,9 +18,11 @@ class Item extends React.Component {
 	render() {
 		const { item, selected } = this.props;
 
-		const icon = item.icon
-			? `./icons/${item.icon}.png`
-			: defaultIcon;
+		const icon = (icon => {
+			if (icon.match(/https?:\/\//))
+				return icon;
+			return icon? `./icons/${icon}.png` : defaultIcon;
+		})(item.icon);
 
 		const title = item.title
 			.replace(/</gm, '&lt;')

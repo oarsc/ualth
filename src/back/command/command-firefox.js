@@ -16,7 +16,7 @@ class FirefoxCommand extends Command {
 		this.title = data.title;
 		this.keyword = data.title;
 		this.url = data.uri;
-		this.icon = data.icon || 'firefox';
+		this.icon = data.iconuri || 'firefox';
 	}
 
 	static parseDefinitions(data) {
