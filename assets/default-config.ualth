@@ -11,6 +11,7 @@
 		"exit": "_EXIT_",
 		"reload": "_RELOAD_"
 	},
+	"globalKey": ".",
 	"infoSaver": {
 		"key": "s",
 		"file": "~/.ualthdb"

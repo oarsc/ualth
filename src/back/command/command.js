@@ -50,6 +50,14 @@ class Command {
 		if (command === '__DEFAULT_TEXT_EDITOR__') return Command.config.default.textEditorCommand;
 		return command;
 	}
+
+	setGlobal(field) {
+		Command.global = field;
+	}
+
+	getGlobal() {
+		return Command.global;
+	}
 }
 
 module.exports = Command;
