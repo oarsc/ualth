@@ -65,6 +65,7 @@ function createWindow() {
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
 	const win = createWindow();
+	win.minimize();
 	globalShortcut.register(defaultHotkey, () => {
 		win.show();
 		win.webContents.send('show');
@@ -72,7 +73,7 @@ app.whenReady().then(() => {
 
 	win.on('blur', () => win.webContents.send('blur'));
 
-	ipcMain.on('hide',    (event) => win.hide());
+	ipcMain.on('hide',    (event) => { win.minimize(); win.hide(); });
 	ipcMain.on('height',  (event, arg) => win.setBounds({ height: arg }));
 	ipcMain.on('perform', (event, arg, params) => event.returnValue = perform(arg, params));
 	ipcMain.on('resolve', (event, arg) => event.returnValue = resolve(arg));
