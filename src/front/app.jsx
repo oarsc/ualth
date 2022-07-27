@@ -33,7 +33,7 @@ class App extends React.Component {
 
 	resizeWindow(numItems) {
 		let windowHeight = ITEM_HEIGHT * Math.min(numItems, NUM_VISIBLE_ITEMS) + INPUT_HEIGHT;
-		if (numItems > 0) windowHeight++;
+		if (numItems > 0) windowHeight+=ITEM_HEIGHT;
 		ipcRenderer.send('height', windowHeight);
 	}
 
