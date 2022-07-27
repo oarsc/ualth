@@ -1,3 +1,4 @@
+const { app } = require("electron");
 const homedir = require('os').homedir();
 const path = require('path');
 const fs = require('fs');
@@ -18,9 +19,16 @@ if (!fs.existsSync(CONFIG_PATH)) {
 }
 
 if (fs.existsSync(CONFIG_PATH)) {
-	const config = JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf-8'));
-	const commands = commandLoader.load(config);
+	const config = (data => {
+		try {
+			return JSON.parse(data);
+		} catch (e) {
+			app.quit();
+			throw e;
+		}
+	})(fs.readFileSync(CONFIG_PATH, 'utf-8'));
 
+	const commands = commandLoader.load(config);
 	Command.setParams(config, commands);
 
 	module.exports = {
