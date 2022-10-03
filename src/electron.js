@@ -5,6 +5,8 @@ const isDev = require("electron-is-dev");
 const { config : { defaultHotkey } } = require('./back/config-load');
 const { perform, performId, match, resolve } = require('./back/action-performer');
 
+const DIMENSIONS = [800, 50];
+
 // Conditionally include the dev tools installer to load React Dev Tools
 let installExtension, REACT_DEVELOPER_TOOLS;
 
@@ -22,8 +24,8 @@ if (require("electron-squirrel-startup")) {
 function createWindow() {
 	// Create the browser window.
 	const win = new BrowserWindow({
-		width: 800,
-		height: 50,
+		width: DIMENSIONS[0],
+		height: DIMENSIONS[1],
 		frame: false,
 		resizable: false,
 		center: true,
@@ -74,7 +76,7 @@ app.whenReady().then(() => {
 	win.on('blur', () => win.webContents.send('blur'));
 
 	ipcMain.on('hide',    (event) => { win.minimize(); win.hide(); });
-	ipcMain.on('height',  (event, arg) => win.setBounds({ height: arg }));
+	ipcMain.on('height',  (event, arg) => win.setBounds({ height: arg, width: DIMENSIONS[0] }));
 	ipcMain.on('perform', (event, arg, params) => event.returnValue = perform(arg, params));
 	ipcMain.on('resolve', (event, arg) => event.returnValue = resolve(arg));
 	ipcMain.on('find',    (event, arg) => event.returnValue = match(arg));
