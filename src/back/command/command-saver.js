@@ -164,10 +164,21 @@ class SaverCommand extends Command {
 		if (fs.existsSync(fileName)) {
 			return fs.readFileSync(fileName, 'utf-8')
 				.split('\n')
+				.reduce((red, line) => {
+
+					if (!red.length || line.match(/(?!\\).=/)) {
+						red.push(line);
+					} else {
+						const lastLine = red.splice(-1);
+						red.push(`${lastLine}\n${line}`);
+					}
+
+					return red;
+				}, [])
 				.filter(hasContent => hasContent)
 				.map(line => {
 					let [ key, ...value] = line.split('=');
-					return [key, value.join('=')];
+					return [key, value.join('=').replace(/\\\=/,'=')];
 				});
 		}
 
@@ -177,7 +188,7 @@ class SaverCommand extends Command {
 	saveFile(commands) {
 		const content = commands
 			.filter(command => command.content)
-			.map(command => `${command.key}=${command.content}`)
+			.map(command => `${command.key}=${command.content.replace(/\=/,'\\=')}`)
 			.join('\n');
 
 		fs.writeFile(FILE_NAME, content, 'utf-8', err => {
