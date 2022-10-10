@@ -14,7 +14,7 @@ class InternalCommand extends Command {
 
 		this.command = data.command;
 		this.keyword = data.key;
-		this.title = LITERALS[data] ?? data.key;
+		this.title = LITERALS[data.command] ?? data.key;
 		this.icon = 'ualth';
 	}
 
