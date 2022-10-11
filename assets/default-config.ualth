@@ -15,9 +15,13 @@
 		"key": "s",
 		"file": "~/.ualthdb"
 	},
-	"firefoxBookmarks": [
-		"~/.mozilla/firefox/i79r44y4.dev-edition-default/bookmarkbackups/"
-	],
+	"firefoxBookmarks": {
+		"profileFolder": "",
+		"path": "",
+		"exclude": [
+			"default"
+		]
+	},
 	"searchEngines": [
 		{
 			"key": "google",
