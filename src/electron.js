@@ -1,8 +1,8 @@
-const { app, BrowserWindow, ipcMain, globalShortcut } = require("electron");
+const { app, BrowserWindow, ipcMain, globalShortcut, dialog } = require("electron");
 const path = require("path");
 const isDev = require("electron-is-dev");
 
-const { config : { defaultHotkey } } = require('./back/config-load');
+const { config : { defaultHotkey }, error: loadError } = require('./back/config-load');
 const { perform, performId, match, resolve } = require('./back/action-performer');
 
 const DIMENSIONS = [800, 50];
@@ -66,6 +66,13 @@ function createWindow() {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
+
+	if (loadError) {
+		dialog.showErrorBox('An error occurred and the app will close', loadError.stack);
+		app.quit();
+		return;
+	}
+
 	const win = createWindow();
 	win.minimize();
 	globalShortcut.register(defaultHotkey, () => {
