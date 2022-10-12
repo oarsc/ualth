@@ -18,24 +18,31 @@ if (!fs.existsSync(CONFIG_PATH)) {
 	}
 }
 
-if (fs.existsSync(CONFIG_PATH)) {
-	const config = (data => {
+module.exports = (() => {
+
+	if (fs.existsSync(CONFIG_PATH)) {
 		try {
-			return JSON.parse(data);
+			const config = JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf-8'));
+			const commands = commandLoader.load(config);
+			Command.setParams(config, commands);
+
+			return {
+				commands: commands,
+				config: config,
+				error: false,
+			};
 		} catch (e) {
-			app.quit();
-			throw e;
+			return {
+				commands: {},
+				config: {},
+				error: e,
+			};
 		}
-	})(fs.readFileSync(CONFIG_PATH, 'utf-8'));
-
-	const commands = commandLoader.load(config);
-	Command.setParams(config, commands);
-
-	module.exports = {
-		commands: commands,
-		config: config
 	}
 
-} else {
-	throw new Error(`Couldn't read config file: ${CONFIG_PATH}`);
-}
+	return {
+		commands: {},
+		config: {},
+		error: new Error(`Couldn't read config file: ${CONFIG_PATH}`),
+	};
+})()
