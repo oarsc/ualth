@@ -3,6 +3,7 @@ const homedir = require('os').homedir();
 const fs = require('fs');
 const { clipboard } = require('electron');
 const { spawn } = require("child_process");
+const { SEARCH_LEVEL } = require('../search/search-model');
 
 let MASTER_KEY = 's';
 let FILE_NAME = '';
@@ -41,6 +42,7 @@ class SaverCommand extends Command {
 					this.keyword = `${MASTER_KEY} reload`;
 					this.title = 'Reloads database file';
 					break;
+				default: break;
 			}
 		}
 
@@ -64,10 +66,12 @@ class SaverCommand extends Command {
 
 	match(inputText) {
 		const match = super.match(inputText);
-		if (match && this.action === ACTION_DEFAULT) {
+		if (match !== SEARCH_LEVEL.NOT_MATCH && this.action === ACTION_DEFAULT) {
 			const reservedWords = ['edit', 'reload'];
 			const regex = new RegExp( `^${MASTER_KEY} (${reservedWords.join('|')})($| )`, 'g' );
-			return !inputText.match(regex);
+			return inputText.match(regex)
+				? SEARCH_LEVEL.NOT_MATCH
+				: SEARCH_LEVEL.STARTING;
 		}
 
 		return match;

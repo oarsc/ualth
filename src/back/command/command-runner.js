@@ -2,6 +2,8 @@ const Command = require('./command');
 const homedir = require('os').homedir();
 const { spawn } = require("child_process");
 const { paramsSplitter } = require('../common');
+const { SEARCH_LEVEL } = require('../search/search-model');
+const { search } = require('../search/search-service');
 
 const PARAMS_REGEX = /\{(?:\*|\d+|\d*\:\d+|\d+\:)\}/g;
 
@@ -27,9 +29,11 @@ class RunnerCommand extends Command {
 			? inputText.split(' ')
 			: [ inputText ];
 
-		return params === undefined
-			? keyword.indexOf(value) === 0
+		const found = params === undefined
+			? search(keyword, value) === SEARCH_LEVEL.STARTING
 			: keyword === value;
+
+		return found? SEARCH_LEVEL.STARTING : SEARCH_LEVEL.NOT_MATCH;
 	}
 
 	perform(argsList) {

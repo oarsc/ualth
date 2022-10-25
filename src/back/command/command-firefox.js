@@ -4,6 +4,8 @@ const jsonlz4 = require('jsonlz4-decompress');
 const fs = require('fs');
 const { shell } = require('electron');
 const { spawn } = require("child_process");
+const { smartSearch, search } = require('../search/search-service');
+const { SEARCH_LEVEL } = require('../search/search-model');
 
 const WIN_PATH = '~/AppData/Roaming/Mozilla/Firefox/Profiles/';
 const LINUX_PATH = '~/.mozilla/firefox/';
@@ -54,7 +56,10 @@ class FirefoxCommand extends Command {
 		const key = this.keyword.toLowerCase();
 		const url = this.url.toLowerCase();
 
-		return key.indexOf(text) >= 0 || url.indexOf(text) >= 0;
+		const keyLevel = smartSearch(key, text)
+		return keyLevel === SEARCH_LEVEL.NOT_MATCH
+			? search(url, text)
+			: keyLevel;
 	}
 
 	perform() {
