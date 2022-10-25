@@ -1,3 +1,5 @@
+const { SEARCH_LEVEL } = require("../search/search-model");
+const { smartSearch, search } = require("../search/search-service");
 
 class Command {
 
@@ -40,9 +42,13 @@ class Command {
 			value = value.toLowerCase();
 		}
 
-		return this.startWith
-			? keyword.indexOf(value) === 0
-			: keyword.indexOf(value) >= 0;
+		if (this.startWith) {
+			return search(keyword, value) === SEARCH_LEVEL.STARTING
+				? SEARCH_LEVEL.STARTING
+				: SEARCH_LEVEL.NOT_MATCH
+		}
+		
+		return smartSearch(keyword, value);
 	}
 
 	cleanCommand(command) {

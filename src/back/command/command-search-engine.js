@@ -1,5 +1,7 @@
 const Command = require('./command');
 const { shell } = require('electron');
+const { SEARCH_LEVEL } = require('../search/search-model');
+const { search } = require('../search/search-service');
 
 class SearchEngineCommand extends Command {
 	static label = 'searchEngines';
@@ -19,9 +21,11 @@ class SearchEngineCommand extends Command {
 		const [ keyword ] = this.keyword.split(' ');
 		const [ value, params ] = inputText.split(' ');
 
-		return params === undefined
-			? keyword.indexOf(value) === 0
+		const found = params === undefined
+			? search(keyword, value) === SEARCH_LEVEL.STARTING
 			: keyword === value;
+
+		return found? SEARCH_LEVEL.STARTING : SEARCH_LEVEL.NOT_MATCH;
 	}
 
 	perform(argsList) {
