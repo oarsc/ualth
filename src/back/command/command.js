@@ -9,7 +9,7 @@ class Command {
 	}
 
 	constructor() {
-		this.id = Math.random().toString().substr(2);
+		this.id = Math.random().toString().substring(2);
 		this.keyName = this.constructor.label;
 		this.caseInsensitive = false;
 		this.startWith = true;

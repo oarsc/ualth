@@ -1,4 +1,4 @@
-const commandsClasses =['search-engine', 'runner', 'saver', 'firefox', 'internal', 'hash']
+const commandsClasses =['search-engine', 'runner', 'saver', 'firefox', 'chrome', 'internal', 'hash']
 	.map(name => require(`./command-${name}`));
 
 module.exports.load = config => 

@@ -26,6 +26,10 @@
 			"default"
 		]
 	},
+	"chromeBookmarks": {
+		"bookmarkFile": "",
+		"path": ""
+	},
 	"searchEngines": [
 		{
 			"key": "google",
