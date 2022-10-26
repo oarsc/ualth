@@ -1,5 +1,5 @@
 const { SEARCH_LEVEL } = require("../search/search-model");
-const { smartSearch, search } = require("../search/search-service");
+const { search } = require("../search/search-service");
 
 class Command {
 
@@ -28,8 +28,9 @@ class Command {
 	}
 
 	match(inputText) {
-		let keyword = this.keyword;
-		let value = this.requiresParams
+		const { keyword, caseInsensitive, startWith } = this;
+
+		const value = this.requiresParams
 			? inputText.split(' ')[0]
 			: inputText;
 
@@ -37,18 +38,13 @@ class Command {
 			return false;
 		}
 
-		if (this.caseInsensitive) {
-			keyword = keyword.toLowerCase();
-			value = value.toLowerCase();
-		}
-
-		if (this.startWith) {
-			return search(keyword, value) === SEARCH_LEVEL.STARTING
+		if (startWith) {
+			return search(keyword, value, caseInsensitive, false) === SEARCH_LEVEL.STARTING
 				? SEARCH_LEVEL.STARTING
 				: SEARCH_LEVEL.NOT_MATCH
 		}
 		
-		return smartSearch(keyword, value);
+		return search(keyword, value, true);
 	}
 
 	cleanCommand(command) {

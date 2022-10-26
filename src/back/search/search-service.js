@@ -1,42 +1,40 @@
 const { SEARCH_LEVEL : {STARTING, CONTAINS, SPLITTED, NOT_MATCH} } = require("./search-model");
 
 module.exports.sortSearchResults = results => results
-	.sort(({level: level1}, {level: level2}) => level1 - level2)
+	.sort(({level: l1}, {level: l2}) => l1 - l2)
 	.map(({ value }) => value);
 
-module.exports.smartSearch = (text, search) => {
-	if (!search.length) return false;
+module.exports.search = (_text, _search, caseInsensitive = false, split = true) => {
+	if (!_search.length) return NOT_MATCH;
 
-	const result = search
-		.split('')
-		.reduce((currentSearchValue, letter, iter) => {
-			const { idx, level } = currentSearchValue;
+	const [ text, search ] = caseInsensitive
+		? [ _text.toLowerCase(), _search.toLowerCase() ]
+		: [ _text, _search ];
 
-			if (idx >= 0) {
-				const foundIdx = text.substr(idx).indexOf(letter);
-				if (foundIdx < 0) {
-					return { idx: -1, level: NOT_MATCH };
-				}
+	const result = { idx: 0, level: STARTING, firstLetterMatch: 0 };
 
-				if (foundIdx === 0) {
-					if (level === STARTING || level === CONTAINS)
-						return { idx: idx+1, level };
+	const success = search.split('').every((letter, i) =>  {
+		const { idx, level } = result;
+		const foundIdx = text.substr(idx).indexOf(letter);
 
-				} else if (iter === 0) {
-					return { idx: foundIdx+1, level: CONTAINS };
-				}
+		if (foundIdx === 0 && (level === STARTING || level === CONTAINS)) {
+			result.idx++;
 
-				return { idx: idx+foundIdx+1, level: SPLITTED };
-			}
-			return currentSearchValue;
-		}, {idx: 0, level: STARTING });
+		} else if (foundIdx > 0 && i === 0) {
+			result.idx = foundIdx + 1;
+			result.level = CONTAINS;
+			result.firstLetterMatch = foundIdx;
+			
+		} else if (foundIdx >= 0 && split) {
+			result.idx += foundIdx + 1;
+			result.level = SPLITTED;
+			
+		} else {
+			return false; // break
+		}
 
-	return result.level;
-}
+		return true;
+	});
 
-
-module.exports.search = (text, search) => {
-	if (!search.length) return false;
-	const idx = text.indexOf(search);
-	return idx > 0? CONTAINS : idx < 0? NOT_MATCH : STARTING;
-}
+	return success ? result.level : NOT_MATCH;
+};

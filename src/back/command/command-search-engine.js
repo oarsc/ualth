@@ -22,7 +22,7 @@ class SearchEngineCommand extends Command {
 		const [ value, params ] = inputText.split(' ');
 
 		const found = params === undefined
-			? search(keyword, value) === SEARCH_LEVEL.STARTING
+			? search(keyword, value, false, false) === SEARCH_LEVEL.STARTING
 			: keyword === value;
 
 		return found? SEARCH_LEVEL.STARTING : SEARCH_LEVEL.NOT_MATCH;
