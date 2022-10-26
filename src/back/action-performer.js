@@ -1,11 +1,11 @@
 const { config : { resolve } , commands } = require('./config-load');
-const { SEARCH_LEVEL } = require('./search/search-model');
+const { SEARCH_LEVEL : { NOT_MATCH } } = require('./search/search-model');
 const { sortSearchResults } = require('./search/search-service');
 
 module.exports.match = inputText => {
 	const results = commands
 		.map(command => ({ value: command, level: command.match(inputText) }))
-		.filter(({ level }) => level !== SEARCH_LEVEL.NOT_MATCH );
+		.filter(({ level }) => level !== NOT_MATCH );
 
 	return sortSearchResults(results);
 }
