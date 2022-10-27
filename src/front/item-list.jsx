@@ -25,7 +25,8 @@ class ItemList extends React.Component {
 						const itemIsSelected = i === this.props.itemSelected;
 						return <Item
 							key={ i }
-							item={ item }
+							item={ item.value }
+							matchingIndexes={ item.matchingIndexes }
 							selected={ itemIsSelected }
 							ref={ ref => { if (itemIsSelected) this.selectedItemRef = ref } }
 							onClick={ this.onClickedItem } />;

@@ -57,8 +57,8 @@ class ChromeCommand extends Command {
 
 	match(inputText) {
 		const keyLevel = search(this.keyword, inputText, true)
-		return keyLevel === SEARCH_LEVEL.NOT_MATCH
-			? search(this.url, inputText, true, false)
+		return keyLevel.level === SEARCH_LEVEL.NOT_FOUND
+			? search(this.url, inputText, true, false, false)
 			: keyLevel;
 	}
 

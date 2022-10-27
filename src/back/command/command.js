@@ -28,23 +28,24 @@ class Command {
 	}
 
 	match(inputText) {
-		const { keyword, caseInsensitive, startWith } = this;
+		const { keyword, caseInsensitive, startWith, title } = this;
 
 		const value = this.requiresParams
 			? inputText.split(' ')[0]
 			: inputText;
 
 		if (!value.length) {
-			return false;
+			return { level: SEARCH_LEVEL.NOT_FOUND };
 		}
 
 		if (startWith) {
-			return search(keyword, value, caseInsensitive, false) === SEARCH_LEVEL.STARTING
-				? SEARCH_LEVEL.STARTING
-				: SEARCH_LEVEL.NOT_MATCH
+			const searchResult = search(keyword, value, caseInsensitive, false, title === keyword);
+			return searchResult.level === SEARCH_LEVEL.STARTING
+				? searchResult
+				: { level: SEARCH_LEVEL.NOT_FOUND };
 		}
 		
-		return search(keyword, value, true);
+		return search(keyword, value, true, true, title === keyword);
 	}
 
 	cleanCommand(command) {

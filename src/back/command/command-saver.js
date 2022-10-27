@@ -66,12 +66,12 @@ class SaverCommand extends Command {
 
 	match(inputText) {
 		const match = super.match(inputText);
-		if (match !== SEARCH_LEVEL.NOT_MATCH && this.action === ACTION_DEFAULT) {
+		if (match.level !== SEARCH_LEVEL.NOT_FOUND && this.action === ACTION_DEFAULT) {
 			const reservedWords = ['edit', 'reload'];
 			const regex = new RegExp( `^${MASTER_KEY} (${reservedWords.join('|')})($| )`, 'g' );
 			return inputText.match(regex)
-				? SEARCH_LEVEL.NOT_MATCH
-				: SEARCH_LEVEL.STARTING;
+				? { level: SEARCH_LEVEL.NOT_FOUND }
+				: match;
 		}
 
 		return match;
