@@ -7,7 +7,7 @@ const ipcRenderer = window.ipcRenderer;
 
 class ItemList extends React.Component {
 	onClickedItem = (item, ev) => {
-		const result = ipcRenderer.sendSync('performId', item.id)
+		const result = ipcRenderer.sendSync('perform', item.id, '');
 		if (result) this.props.hideApp();
 		else document.getElementById('input').focus();
 	}
