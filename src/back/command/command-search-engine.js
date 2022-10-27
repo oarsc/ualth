@@ -21,11 +21,19 @@ class SearchEngineCommand extends Command {
 		const [ keyword ] = this.keyword.split(' ');
 		const [ value, params ] = inputText.split(' ');
 
-		const found = params === undefined
-			? search(keyword, value, false, false) === SEARCH_LEVEL.STARTING
-			: keyword === value;
+		if (params === undefined) {
+			const searchResult = search(keyword, value, false, false, false);
+			if (searchResult.level === SEARCH_LEVEL.STARTING) {
+				return searchResult;
+			}
+		} else if (keyword === value) {
+			return {
+				level: SEARCH_LEVEL.STARTING,
+				matchingIndexes: [],
+			};
+		}
 
-		return found? SEARCH_LEVEL.STARTING : SEARCH_LEVEL.NOT_MATCH;
+		return { level: SEARCH_LEVEL.NOT_FOUND };
 	}
 
 	perform(argsList) {

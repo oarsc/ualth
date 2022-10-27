@@ -1,5 +1,5 @@
 module.exports.SEARCH_LEVEL = {
-	NOT_MATCH: 0,
+	NOT_FOUND: 0,
 	STARTING: 1,
 	HISTORIC: 2,
 	CONTAINS: 3,

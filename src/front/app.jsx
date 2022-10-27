@@ -59,7 +59,7 @@ class App extends React.Component {
 		this.resizeWindow(items.length);
 		this.setState({ items: items, itemSelected: canSelect? select : -1 });
 		if (canSelect && select >= 0)
-			return items[select];
+			return items[select].value;
 	}
 
 	selectNext = ev => {
@@ -67,7 +67,7 @@ class App extends React.Component {
 		const nextSelect = itemSelected + 1;
 		if (items.length > nextSelect) {
 			this.setState({ itemSelected: nextSelect });
-			return items[nextSelect];
+			return items[nextSelect].value;
 		}
 		return false;
 	}
@@ -76,7 +76,7 @@ class App extends React.Component {
 		const nextSelect = itemSelected - 1;
 		if (nextSelect >= 0) {
 			this.setState({ itemSelected: nextSelect });
-			return items[nextSelect];
+			return items[nextSelect].value;
 		}
 		return false;
 	}
@@ -89,7 +89,7 @@ class App extends React.Component {
 		ev.preventDefault();
 
 		const { items, itemSelected } = this.state;
-		const result = ipcRenderer.sendSync('perform', items[itemSelected].id, inputText);
+		const result = ipcRenderer.sendSync('perform', items[itemSelected].value.id, inputText);
 		if (result) this.hide();
 	}
 

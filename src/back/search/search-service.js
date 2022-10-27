@@ -1,33 +1,49 @@
-const { SEARCH_LEVEL : {STARTING, CONTAINS, SPLITTED, NOT_MATCH} } = require("./search-model");
+const { SEARCH_LEVEL : {STARTING, CONTAINS, SPLITTED, NOT_FOUND} } = require("./search-model");
 
 module.exports.sortSearchResults = results => results
-	.sort(({level: l1}, {level: l2}) => l1 - l2)
-	.map(({ value }) => value);
+	.sort(({level: lev1, matchingIndexes: firstMatch1 = []}, {level: lev2, matchingIndexes: firstMatch2 = []}) => {
+		if (lev1 === lev2) {
+			if (firstMatch1.length && firstMatch2.length)
+				return firstMatch1[0][0] - firstMatch2[0][0];
+		}
+		return lev1 - lev2;
+	});
 
-module.exports.search = (_text, _search, caseInsensitive = false, split = true) => {
-	if (!_search.length) return NOT_MATCH;
+module.exports.search = (_text, _search, caseInsensitive = false, split = true, recordIndexes = true) => {
+	if (!_search.length) return { level: NOT_FOUND };
 
 	const [ text, search ] = caseInsensitive
 		? [ _text.toLowerCase(), _search.toLowerCase() ]
 		: [ _text, _search ];
 
-	const result = { idx: 0, level: STARTING, firstLetterMatch: 0 };
+	const index = text.indexOf(search);
+	if (index >= 0) {
+		return {
+			level: index === 0? STARTING : CONTAINS,
+			matchingIndexes: recordIndexes? [ [index, index+search.length]] : [],
+		};
+	}
+
+	let lastIndexChecked = 0;
+	let currentLevel = STARTING;
+	const foundIndexes = [];
 
 	const success = search.split('').every((letter, i) =>  {
-		const { idx, level } = result;
-		const foundIdx = text.substr(idx).indexOf(letter);
+		const foundIdx = text.substr(lastIndexChecked).indexOf(letter);
 
-		if (foundIdx === 0 && (level === STARTING || level === CONTAINS)) {
-			result.idx++;
+		if (foundIdx === 0 && (currentLevel === STARTING || currentLevel === CONTAINS)) {
+			foundIndexes.push(lastIndexChecked+foundIdx);
+			lastIndexChecked++;
 
 		} else if (foundIdx > 0 && i === 0) {
-			result.idx = foundIdx + 1;
-			result.level = CONTAINS;
-			result.firstLetterMatch = foundIdx;
+			foundIndexes.push(lastIndexChecked+foundIdx);
+			lastIndexChecked = foundIdx + 1;
+			currentLevel = CONTAINS;
 			
 		} else if (foundIdx >= 0 && split) {
-			result.idx += foundIdx + 1;
-			result.level = SPLITTED;
+			foundIndexes.push(lastIndexChecked+foundIdx);
+			lastIndexChecked += foundIdx + 1;
+			currentLevel = SPLITTED;
 			
 		} else {
 			return false; // break
@@ -36,5 +52,23 @@ module.exports.search = (_text, _search, caseInsensitive = false, split = true) 
 		return true;
 	});
 
-	return success ? result.level : NOT_MATCH;
+	if (success) {
+		return {
+			level: currentLevel,
+			matchingIndexes: !recordIndexes ? [] : foundIndexes.reduce((acc, index) => {
+				if (!acc.length) {
+					acc.push([index, index+1 ]);
+				} else {
+					const lastIndexes = acc[acc.length-1];
+					if (lastIndexes[1] === index) {
+						lastIndexes[1] = index+1;
+					} else {
+						acc.push([ index, index+1 ]);
+					}
+				}
+				return acc;
+			}, [])
+		};
+	}
+	return { level: NOT_FOUND }
 };

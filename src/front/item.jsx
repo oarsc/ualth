@@ -16,7 +16,7 @@ class Item extends React.Component {
 	}
 
 	render() {
-		const { item, selected } = this.props;
+		const { item, matchingIndexes, selected } = this.props;
 
 		const icon = (icon => {
 			if (icon.match(/https?:\/\//))
@@ -24,7 +24,12 @@ class Item extends React.Component {
 			return icon? `./icons/${icon}.png` : defaultIcon;
 		})(item.icon);
 
-		const title = item.title
+
+		const title = matchingIndexes.reverse()
+			.reduce((title, [startIndex, endIndex]) =>
+				title.substring(0, startIndex) +'{b}'+
+				title.substring(startIndex, endIndex) +'{/b}'+
+				title.substr(endIndex), item.title)
 			.replace(/</gm, '&lt;')
 			.replace(/>/gm, '&gt;')
 			.replace(/{b}(.*?){\/b}/gm, '<b>$1</b>')
@@ -42,7 +47,7 @@ class Item extends React.Component {
 					<div className='icon'>
 						<img src={ icon } alt=''/>
 					</div>
-					<span dangerouslySetInnerHTML={{__html: title}}></span>
+					<span aaa={title} dangerouslySetInnerHTML={{__html: title}}></span>
 				</div>
 
 			</div>
