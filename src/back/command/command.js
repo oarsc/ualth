@@ -1,3 +1,4 @@
+const md5 = require("md5");
 const { SEARCH_LEVEL } = require("../search/search-model");
 const { search } = require("../search/search-service");
 
@@ -8,8 +9,16 @@ class Command {
 		Command.commands = commands;
 	}
 
+	#_id = undefined;
+	get id(){
+		if (!this.#_id) {
+			this.#_id = md5(this.keyName+this.keyword);
+		}
+		return this.#_id;
+	}
+
 	constructor() {
-		this.id = Math.random().toString().substring(2);
+		//this.id = Math.random().toString().substring(2);
 		this.keyName = this.constructor.label;
 		this.caseInsensitive = false;
 		this.startWith = true;

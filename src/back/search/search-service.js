@@ -1,8 +1,14 @@
 const { SEARCH_LEVEL : {STARTING, CONTAINS, SPLITTED, NOT_FOUND} } = require("./search-model");
 
 module.exports.sortSearchResults = results => results
-	.sort(({level: lev1, matchingIndexes: firstMatch1 = []}, {level: lev2, matchingIndexes: firstMatch2 = []}) => {
+	.sort(({level: lev1, matchingIndexes: firstMatch1 = [], priority: p1}, {level: lev2, matchingIndexes: firstMatch2 = [], priority: p2}) => {
 		if (lev1 === lev2) {
+			if (p1) {
+				return p2? p2-p1 : -1;
+			} else if (p2) {
+				return 1;
+			}
+
 			if (firstMatch1.length && firstMatch2.length)
 				return firstMatch1[0][0] - firstMatch2[0][0];
 		}

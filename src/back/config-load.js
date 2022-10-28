@@ -1,4 +1,3 @@
-const { app } = require("electron");
 const homedir = require('os').homedir();
 const path = require('path');
 const fs = require('fs');
@@ -13,7 +12,7 @@ if (!fs.existsSync(CONFIG_PATH)) {
 	try{
 		fs.copyFileSync(CONFIG_DEFAULT_FILE, CONFIG_PATH, fs.constants.COPYFILE_EXCL);
 	} catch (e) {
-		if (e.code != 'EEXIST')
+		if (e.code !== 'EEXIST')
 			throw e;
 	}
 }
@@ -33,7 +32,7 @@ module.exports = (() => {
 			};
 		} catch (e) {
 			return {
-				commands: {},
+				commands: [],
 				config: {},
 				error: e,
 			};
@@ -41,8 +40,8 @@ module.exports = (() => {
 	}
 
 	return {
-		commands: {},
+		commands: [],
 		config: {},
 		error: new Error(`Couldn't read config file: ${CONFIG_PATH}`),
 	};
-})()
+})();
