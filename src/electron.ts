@@ -1,27 +1,22 @@
-const { app, BrowserWindow, ipcMain, globalShortcut, dialog } = require("electron");
-const path = require("path");
-const isDev = require("electron-is-dev");
+import { app, BrowserWindow, ipcMain, globalShortcut, dialog } from 'electron';
+import { join } from 'path';
+import isDev from 'electron-is-dev';
+// TODO: include the dev tools installer to load React Dev Tools?
+//import { default as installExtension, REACT_DEVELOPER_TOOLS } from 'electron-devtools-installer';
 
-const { config : { defaultHotkey }, error: loadError } = require('./back/config-load');
-const { perform, performId, match, resolve } = require('./back/action-performer');
+import { config, error as loadError }  from './back/config-load';
+
+//const { config : { defaultHotkey }, error: loadError } = require('./back/config-load');
+import { perform, match, resolve } from './back/action-performer';
 
 const DIMENSIONS = [800, 50];
-
-// Conditionally include the dev tools installer to load React Dev Tools
-let installExtension, REACT_DEVELOPER_TOOLS;
-
-if (isDev) {
-	const devTools = require("electron-devtools-installer");
-	installExtension = devTools.default;
-	REACT_DEVELOPER_TOOLS = devTools.REACT_DEVELOPER_TOOLS;
-}
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling
 if (require("electron-squirrel-startup")) {
 	app.quit();
 }
 
-function createWindow() {
+function createWindow(): BrowserWindow {
 	// Create the browser window.
 	const win = new BrowserWindow({
 		width: DIMENSIONS[0],
@@ -37,8 +32,8 @@ function createWindow() {
 		webPreferences: {
 			nodeIntegration: false, // is default value after Electron v5
 			contextIsolation: true, // protect against prototype pollution
-			enableRemoteModule: false, // turn off remote
-			preload: path.join(__dirname, './bridge.js') // use bridge as a preload script
+			//enableRemoteModule: false, // turn off remote
+			preload: join(__dirname, './bridge.js') // use bridge as a preload script
 		}
 	});
 
@@ -52,7 +47,7 @@ function createWindow() {
 	win.loadURL(
 		isDev
 			? "http://localhost:3000"
-			: `file://${path.join(__dirname, "../build/index.html")}`
+			: `file://${join(__dirname, "../build/index.html")}`
 	);
 
 	//if (isDev) {
@@ -68,14 +63,14 @@ function createWindow() {
 app.whenReady().then(() => {
 
 	if (loadError) {
-		dialog.showErrorBox('An error occurred and the app will close', loadError.stack);
+		dialog.showErrorBox('An error occurred and the app will close', loadError.stack ?? '');
 		app.quit();
 		return;
 	}
 
 	const win = createWindow();
 	win.minimize();
-	globalShortcut.register(defaultHotkey, () => {
+	globalShortcut.register(config?.defaultHotkey ?? 'Alt+Space', () => {
 		win.show();
 		win.webContents.send('show');
 	});
