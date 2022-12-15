@@ -1,9 +1,9 @@
 body {
-	margin: 0;
-	font-family: Arial;
-	overflow: hidden;
+  margin: 0;
+  font-family: Arial;
+  overflow: hidden;
 }
 
 input:focus {
-	outline-width: 0;
+  outline-width: 0;
 }

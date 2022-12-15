@@ -11,6 +11,11 @@
 		"exit": "_EXIT_",
 		"reload": "_RELOAD_"
 	},
+	"hash": {
+		"key": "sh",
+		"exe": "executable",
+		"seed": 1234
+	},
 	"infoSaver": {
 		"key": "s",
 		"file": "~/.ualthdb"

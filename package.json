@@ -12,9 +12,10 @@
     "desktop",
     "launcher"
   ],
-  "main": "src/electron.js",
+  "main": "dist/electron.js",
   "homepage": "./",
   "scripts": {
+    "build:b": "tsc",
     "dev": "concurrently -k \"cross-env BROWSER=none npm start\" \"npm:electron\"",
     "electron": "wait-on tcp:3000 && electron-forge start",
     "start": "react-scripts start",
@@ -40,14 +41,12 @@
     ]
   },
   "dependencies": {
-    "@testing-library/jest-dom": "^5.16.2",
-    "@testing-library/react": "^12.1.4",
-    "@testing-library/user-event": "^13.5.0",
     "electron-is-dev": "^2.0.0",
     "electron-squirrel-startup": "^1.0.0",
     "jsonlz4-decompress": "^0.0.3",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
+    "md5": "^2.3.0",
+    "react": "^18.0.26",
+    "react-dom": "^18.0.26",
     "react-scripts": "^5.0.1"
   },
   "devDependencies": {
@@ -56,10 +55,17 @@
     "@electron-forge/maker-rpm": "^6.0.0-beta.63",
     "@electron-forge/maker-squirrel": "^6.0.0-beta.63",
     "@electron-forge/maker-zip": "^6.0.0-beta.63",
+    "@testing-library/jest-dom": "^5.16.2",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
+    "@types/md5": "^2.3.2",
+    "@types/node": "^18.11.16",
+    "@types/react": "^18.0.26",
     "concurrently": "^7.0.0",
     "cross-env": "^7.0.3",
-    "electron": "^17.1.2",
+    "electron": "^22.0.0",
     "electron-devtools-installer": "^3.2.0",
+    "typescript": "^4.9.4",
     "wait-on": "^6.0.1"
   },
   "config": {
