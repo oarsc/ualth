@@ -13,11 +13,12 @@ export function match(inputText: string): PriorizedSearchResult[] {
     .filter(({ level }) => level !== SearchLevel.NOT_FOUND );
 
   searchHistory(inputText)
-    .filter(historicElement => !historicElement.command?.requiresParams)
+    //.filter(historicElement => !historicElement.command?.requiresParams)
     .forEach(historicElement => {
       matches.every(match => {
         if (historicElement.command?.id === match.command.id) {
-          match.priority = historicElement.priority;
+          if (!match.priority || match.priority < historicElement.priority)
+            match.priority = historicElement.priority;
           return false;
         }
         return true;
