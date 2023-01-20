@@ -185,9 +185,7 @@ export default class SaverCommand extends Command {
     if (fs.existsSync(fileName)) {
       return fs.readFileSync(fileName, 'utf-8')
         .split('\n')
-        .filter(hasContent => hasContent)
         .reduce((red, line) => {
-
           if (!red.length || line.match(/(?!\\).=/)) {
             red.push(line);
           } else {
