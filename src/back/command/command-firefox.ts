@@ -7,6 +7,10 @@ import Command from "./command";
 import { FirefoxBookmark } from "../models/firefox-bookmark.model";
 import { search } from "../services/search-service";
 import { SearchLevel, SearchResult } from "../../shared-models/models";
+import { open } from 'sqlite'
+import sqlite from 'sqlite3'
+
+
 
 const jsonlz4 = require('jsonlz4-decompress');
 
@@ -50,15 +54,43 @@ export default class FirefoxCommand extends Command {
     return fs.readdirSync(dir)
       .filter(profile => filterExcludes(profile, data.exclude))
       .filter(profile => fs.existsSync(`${dir}/${profile}/bookmarkbackups/`))
-      .flatMap(profile =>
-        fs.readdirSync(`${dir}/${profile}/bookmarkbackups/`)
+      .flatMap(profile => {
+        fs.copyFileSync(`${dir}/${profile}/places.sqlite`, `${dir}/${profile}/places2.sqlite`);
+
+        
+
+
+
+        console.log(`${dir}/${profile}/places.sqlite`)
+        return fs.readdirSync(`${dir}/${profile}/bookmarkbackups/`)
           .sort()
           .slice(-1)
           .map(file => fs.readFileSync(`${dir}/${profile}/bookmarkbackups/${file}`))
           .flatMap(fileBuffer => recollect(jsonlz4(fileBuffer).children))
           .map(bookmark => ({ ...bookmark, profile: getProfileName(profile)} as ProfiledBookmark))
-      )
+      })
       .filter(bookmark => bookmark.title);
+  }
+
+  async readBookmark<T>(path: string): Promise<T[]> {
+
+    const db = await open({
+      filename: path,
+      driver: sqlite.Database
+    });
+  
+    const results: T[] = [];
+  
+    try {
+      await db.each('SELECT p.url as uri, b.title FROM moz_places p JOIN moz_bookmarks b ON p.id = b.fk', [], (err, row) => {
+        if (err) throw(err);
+        else results.push(row);
+      });
+    } finally {
+      await db.close();
+    }
+  
+    return results;
   }
 
   override match(inputText: string): SearchResult {
