@@ -49,8 +49,8 @@ export function resolve(value: string): string {
   return value;
 }
 
-export function historyString(index: number): HistoryElement | undefined {
-  return getHistoryString(index);
+export function historyString(offset: number, forward: boolean, preString: string): HistoryElement | undefined {
+  return getHistoryString(offset, forward, preString);
 }
 
 export function removeHistory(index: number) {

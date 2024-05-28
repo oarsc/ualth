@@ -3,7 +3,7 @@ import { homedir } from 'os';
 import { join } from 'path';
 import Command from '../command/command';
 import { commands } from '../config-load';
-import { HistoricSearchResult, SearchLevel, HistoryElement } from '../../shared-models/models';
+import { HistoricSearchResult, SearchLevel, HistoryElement, HistoryElementReturn } from '../../shared-models/models';
 
 const HISTORIC_PATH = join(homedir(), '.ualthhi');
 const MAX_HISTORY = 10000;
@@ -48,11 +48,45 @@ export function searchHistory(input: string): HistoricSearchResult[] {
     .filter(result => result.searchResult?.level !== SearchLevel.NOT_FOUND);
 }
 
-export function getHistoryString(index: number): HistoryElement | undefined {
+export function getHistoryString(offset: number, forward: boolean, preString: string): HistoryElementReturn | undefined {
 
-  const visibleHistoric = historic.filter(historicElement => historicElement.visible).reverse();
+  if (forward) {
+    const tmpHistoric = historic
+      .filter(historicElement => historicElement.visible)
+      .reverse()
+      .slice(offset + 1)
 
-  return index < visibleHistoric.length ? visibleHistoric[index] : undefined;
+    const index = findMatchingIndex(tmpHistoric, preString)
+
+    return tmpHistoric.length && tmpHistoric[index]
+    ? {
+      ...tmpHistoric[index],
+      returnedIndex: offset + 1 + index
+    } : undefined;
+
+  } else {
+
+    let tmpHistoric = historic
+      .filter(historicElement => historicElement.visible)
+
+    const reversedOffset = tmpHistoric.length - offset
+
+    tmpHistoric = tmpHistoric.slice(reversedOffset)
+
+    const index = findMatchingIndex(tmpHistoric, preString)
+
+    return tmpHistoric.length && tmpHistoric[index]
+    ? {
+      ...tmpHistoric[index],
+      returnedIndex: offset - 1 - index
+    } : undefined;
+  }
+}
+
+function findMatchingIndex(array: HistoryElement[], preString: string) {
+  return preString
+    ? array.findIndex(historicElement => historicElement.inputText.startsWith(preString))
+    : 0
 }
 
 export function removeHistoryByIndex(index: number) {

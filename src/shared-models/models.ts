@@ -32,6 +32,10 @@ export interface HistoryElement {
   inputText: string
 }
 
+export interface HistoryElementReturn extends HistoryElement {
+  returnedIndex: number
+}
+
 export interface StyleConfig {
   radius?: number,
   background?: string,

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Command, HistoryElement } from '../shared-models/models';
+import { Command, HistoryElementReturn } from '../shared-models/models';
 import './launcher-input.scss';
 
 const ipcRenderer = window.ipcRenderer;
@@ -46,25 +46,34 @@ export default class InputLauncher extends React.Component<InputLauncherProperti
       if (ev.shiftKey) {
 
         if (ev.code === 'ArrowUp') {
-          const historyString = ipcRenderer.sendSync<HistoryElement | undefined>('history', ++this.historyIndex);
+
+          let value = this.input.value;
+          if (this.input.selectionStart != undefined) {
+            value = value.substring(0, this.input.selectionStart);
+          }
+
+          const historyString = ipcRenderer.sendSync<HistoryElementReturn | undefined>('history', this.historyIndex, true, value);
 
           if (historyString) {
-            this.loadAutocomplete('', historyString.inputText);
+            this.historyIndex = historyString.returnedIndex;
+            this.loadAutocomplete(value, historyString.inputText);
+            this.props.loadItems(historyString.inputText, historyString.commandId);
+          }
+        } else if (this.historyIndex >= 0) {
+
+          let value = this.input.value;
+          if (this.input.selectionStart != undefined) {
+            value = value.substring(0, this.input.selectionStart);
+          }
+
+          const historyString = ipcRenderer.sendSync<HistoryElementReturn | undefined>('history', this.historyIndex, false, value);
+          if (historyString) {
+            this.historyIndex = historyString.returnedIndex;
+            this.loadAutocomplete(value, historyString.inputText);
             this.props.loadItems(historyString.inputText, historyString.commandId);
           } else {
-            this.historyIndex--;
-          }
-        } else {
-          this.historyIndex--;
-          if (this.historyIndex >= 0) {
-            const historyString = ipcRenderer.sendSync<HistoryElement | undefined>('history', this.historyIndex);
-            if (historyString) {
-              this.loadAutocomplete('', historyString.inputText);
-              this.props.loadItems(historyString.inputText, historyString.commandId);
-            }
-          } else {
             this.historyIndex = -1;
-            this.input.value = '';
+            this.input.value = value;
             this.props.clearItems();
           }
         }

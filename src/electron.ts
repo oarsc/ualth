@@ -103,7 +103,7 @@ app.whenReady().then(() => {
 	ipcMain.on('perform',       (event, arg, params) => event.returnValue = perform(arg, params));
 	ipcMain.on('resolve',       (event, arg) => event.returnValue = resolve(arg));
 	ipcMain.on('find',          (event, arg) => event.returnValue = match(arg));
-	ipcMain.on('history',       (event, arg) => event.returnValue = historyString(arg));
+	ipcMain.on('history',       (event, arg, param1, param2) => event.returnValue = historyString(arg, param1, param2));
 	ipcMain.on('styleConfig',   (event, arg) => event.returnValue = config?.style ?? {});
 });
 
