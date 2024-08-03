@@ -16,9 +16,13 @@ export function match(inputText: string): PriorizedSearchResult[] {
     //.filter(historicElement => !historicElement.command?.requiresParams)
     .forEach(historicElement => {
       matches.every(match => {
-        if (historicElement.command?.id === match.command.id) {
-          if (!match.priority || match.priority < historicElement.priority)
+        const matchCommand = match.command;
+        if (historicElement.command?.id === matchCommand.id) {
+          if (matchCommand.fixedPriority) {
+            match.priority = matchCommand.fixedPriority;
+          } else if (!match.priority || match.priority < historicElement.priority) {
             match.priority = historicElement.priority;
+          }
           return false;
         }
         return true;

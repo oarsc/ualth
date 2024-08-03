@@ -45,6 +45,7 @@ export default class SaverCommand extends Command {
         case Action.DEFAULT:
           this.keyWord = SaverCommand.masterKey;
           this.requiresParams = true;
+          this.fixedPriority = -1;
           this.title = 'Save new database entry';
           break;
 

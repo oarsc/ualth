@@ -18,6 +18,7 @@ export default class Command {
   title = '';
   icon = '';
   command = '';
+  fixedPriority?: number;
   
   requiresParams = false;
   caseInsensitive = false;
