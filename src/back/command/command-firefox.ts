@@ -8,7 +8,7 @@ import { FirefoxBookmark } from "../models/firefox-bookmark.model";
 import { search } from "../services/search-service";
 import { SearchLevel, SearchResult } from "../../shared-models/models";
 
-const jsonlz4 = require('jsonlz4-decompress');
+const mozlz4a = require('mozlz4a');
 
 const WIN_PATH = '~/AppData/Roaming/Mozilla/Firefox/Profiles/';
 const LINUX_PATH = '~/.mozilla/firefox/';
@@ -55,7 +55,9 @@ export default class FirefoxCommand extends Command {
           .sort()
           .slice(-1)
           .map(file => fs.readFileSync(`${dir}/${profile}/bookmarkbackups/${file}`))
-          .flatMap(fileBuffer => recollect(jsonlz4(fileBuffer).children))
+          .map(buffer => mozlz4a.decompress(buffer))
+          .map(content => JSON.parse(content.toString('UTF-8')))
+          .flatMap(json => recollect(json.children))
           .map(bookmark => ({ ...bookmark, profile: getProfileName(profile)} as ProfiledBookmark))
       )
       .filter(bookmark => bookmark.title);

@@ -98,9 +98,24 @@ export default class InputLauncher extends React.Component<InputLauncherProperti
       ev.preventDefault();
       if (this.historyIndex >= 0) {
         ipcRenderer.send('removeHistory', this.historyIndex);
-        this.historyIndex = -1;
-        this.input.value = '';
-        this.props.clearItems();
+        
+        const value = (({ selectionStart, selectionEnd, value }) =>
+          selectionStart === selectionEnd
+            ? value
+            : value.substring(0, selectionStart ?? 0)
+        )(this.input);
+
+        const historyString = ipcRenderer.sendSync<HistoryElementReturn | undefined>('history', this.historyIndex, false, value);
+
+        if (historyString) {
+          this.historyIndex = historyString.returnedIndex;
+          this.loadAutocomplete(value, historyString.inputText);
+          this.props.loadItems(historyString.inputText, historyString.commandId);
+        } else {
+          this.historyIndex = -1;
+          this.input.value = value;
+          this.props.clearItems();
+        }
       }
     } else if (ev.key.length === 1 && !ev.ctrlKey) {
       this.historyIndex = -1;
