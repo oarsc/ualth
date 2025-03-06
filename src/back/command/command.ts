@@ -20,6 +20,7 @@ export default class Command {
   command = '';
   fixedPriority?: number;
   
+  keepHistory = true;
   requiresParams = false;
   caseInsensitive = false;
   startsWith = true;

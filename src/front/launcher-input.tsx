@@ -10,7 +10,7 @@ interface InputLauncherProperties {
   clearItems: (hide?: boolean) => void,
   findAndSelectNextItem: () => Command | undefined,
   findAndSelectPrevItem: () => Command | undefined,
-  onSubmitForm: (inputText: string, ev: Event) => void,
+  onSubmitForm: (inputText: string, ev: Event, keepHistory: boolean) => void,
 }
 
 interface InputLauncherState { }
@@ -20,12 +20,12 @@ export default class InputLauncher extends React.Component<InputLauncherProperti
   input!: HTMLInputElement;
   historyIndex = -1;
 
-  onSubmit = (ev: React.FormEvent) => {
-    this.props.onSubmitForm(this.input.value, ev.nativeEvent);
-  }
-
   onKeyDown = (ev: React.KeyboardEvent) => {
-    if (ev.code === 'Escape') {
+    if (ev.code === 'NumpadEnter') {
+      this.props.onSubmitForm(this.input.value, ev.nativeEvent, false);
+    } else if (ev.code === 'Enter') {
+      this.props.onSubmitForm(this.input.value, ev.nativeEvent, true);
+    } else if (ev.code === 'Escape') {
       ev.preventDefault();
       this.props.hideApp();
 
@@ -158,7 +158,7 @@ export default class InputLauncher extends React.Component<InputLauncherProperti
 
   override render(): JSX.Element {
     return (
-      <form id="launcher-input" onSubmit={ this.onSubmit }>
+      <form id="launcher-input">
         <input autoFocus
           id="input"
           type="text"

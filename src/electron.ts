@@ -100,7 +100,7 @@ app.whenReady().then(() => {
 	ipcMain.on('hide',          (event) => { win.minimize(); win.hide(); });
 	ipcMain.on('height',        (event, arg) => win.setBounds({ width: DIMENSIONS[0], height: arg }));
 	ipcMain.on('removeHistory', (event, arg) => removeHistory(arg));
-	ipcMain.on('perform',       (event, arg, params) => event.returnValue = perform(arg, params));
+	ipcMain.on('perform',       (event, arg, param1, param2) => event.returnValue = perform(arg, param1, param2));
 	ipcMain.on('resolve',       (event, arg) => event.returnValue = resolve(arg));
 	ipcMain.on('find',          (event, arg) => event.returnValue = match(arg));
 	ipcMain.on('history',       (event, arg, param1, param2) => event.returnValue = historyString(arg, param1, param2));

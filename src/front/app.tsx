@@ -101,11 +101,11 @@ export default class App extends React.Component<AppProperties, AppState> {
     }
   }
 
-  onSubmitForm = (inputText: string, ev: Event) => {
+  onSubmitForm = (inputText: string, ev: Event, keepHistory: boolean) => {
     ev.preventDefault();
 
     const { results, resultSelected } = this.state;
-    const result = ipcRenderer.sendSync('perform', results[resultSelected].command.id, inputText);
+    const result = ipcRenderer.sendSync('perform', results[resultSelected].command.id, inputText, keepHistory);
     if (result) this.hide();
   }
 

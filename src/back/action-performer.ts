@@ -32,12 +32,14 @@ export function match(inputText: string): PriorizedSearchResult[] {
   return sortSearchResults(matches);
 }
 
-export function perform(id: string, input: string) {
+export function perform(id: string, input: string, keepHistory: boolean) {
   const [ command ] = commands.filter(command => command.id === id);
 
   if (command) {
     command.perform(input.split(' ').slice(1));
-    saveHistory(command, input);
+    if (keepHistory && command.keepHistory) {
+      saveHistory(command, input);
+    }
     return command;
   }
 }
