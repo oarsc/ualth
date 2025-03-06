@@ -1,3 +1,4 @@
+import { spawn } from "child_process";
 import Command from "./command";
 import { app } from "electron";
 import { InternalCommandsConfig } from "../models/config.model";
@@ -37,7 +38,8 @@ export default class InternalCommand extends Command {
       app.quit();
 
     } else if (this.command === '_RELOAD_') {
-      app.relaunch();
+      //app.relaunch();
+      spawn(process.argv0, process.argv.slice(1));
       app.exit();
     }
   }
