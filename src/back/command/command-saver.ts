@@ -46,6 +46,7 @@ export default class SaverCommand extends Command {
           this.keyWord = SaverCommand.masterKey;
           this.requiresParams = true;
           this.fixedPriority = -1;
+          this.keepHistory = false;
           this.title = 'Save new database entry';
           break;
 

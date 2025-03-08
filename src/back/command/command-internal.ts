@@ -38,8 +38,11 @@ export default class InternalCommand extends Command {
       app.quit();
 
     } else if (this.command === '_RELOAD_') {
-      //app.relaunch();
-      spawn(process.argv0, process.argv.slice(1));
+      if (process.platform === 'win32') {
+        app.relaunch();
+      } else {
+        spawn(process.argv0, process.argv.slice(1));
+      }
       app.exit();
     }
   }
