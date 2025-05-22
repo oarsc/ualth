@@ -32,11 +32,18 @@
 	"copy": {
 		"key": ","
 	},
+	"entities": {
+		"key": "ent"
+	},
 	"json": {
 		"key": "json"
 	},
 	"xml": {
 		"key": "xml"
+	},
+	"base64": {
+		"encodeKey": "btoa",
+		"decodeKey": "atob"
 	},
 	"unixApps": [
 		"/usr/share/applications",

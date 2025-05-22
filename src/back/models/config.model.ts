@@ -25,6 +25,14 @@ export interface CopyConfig {
   key: string
 }
 
+export interface HtmlEntitiesConfig {
+  key: string
+}
+export interface HtmlEntitiesConfigElement {
+  key: string,
+  encode: boolean
+}
+
 export interface JsonBeautifyConfig {
   key: string
 }
@@ -39,6 +47,15 @@ export interface XmlBeautifyConfig {
 export interface XmlBeautifyConfigElement {
   key: string
   maximize: boolean
+}
+
+export interface HtmlBase64Config {
+  encodeKey: string,
+  decodeKey: string
+}
+export interface HtmlBase64ConfigElement {
+  key: string,
+  encode: boolean
 }
 
 export interface FirefoxConfig {

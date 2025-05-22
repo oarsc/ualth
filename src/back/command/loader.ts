@@ -10,6 +10,8 @@ import HashCommand from "./command-hash";
 import CopyCommand from "./command-copy";
 import UnixAppsCommand from "./command-unix-apps";
 import WindowsStartAppsCommand from "./command-windows-start-apps";
+import HtmlEntitiesCommand from "./command-html-entities";
+import HtmlBase64Command from "./command-base64-encode";
 import JsonBeautifyCommand from "./command-json-beautify";
 import XmlBeautifyCommand from "./command-xml-beautify";
 
@@ -24,6 +26,8 @@ const commandsClasses = [
   CopyCommand,
   UnixAppsCommand,
   WindowsStartAppsCommand,
+  HtmlEntitiesCommand,
+  HtmlBase64Command,
   JsonBeautifyCommand,
   XmlBeautifyCommand,
 ]
