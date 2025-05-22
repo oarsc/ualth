@@ -99,7 +99,7 @@ export function removeHistoryByIndex(index: number) {
   }
 }
 
-export function saveHistory(command: Command, input: string): void {
+export function saveHistory(command: Command, input: string, visible: boolean = true): void {
 
   historic
     .map((historicElement, index) => {
@@ -116,7 +116,7 @@ export function saveHistory(command: Command, input: string): void {
     .forEach(index => historic.splice(index, 1));
 
   historic.push({
-    visible: true,
+    visible: visible,
     commandId: command.id!,
     inputText: input
   });

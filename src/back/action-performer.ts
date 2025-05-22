@@ -39,6 +39,8 @@ export function perform(id: string, input: string, keepHistory: boolean) {
     command.perform(input.split(' ').slice(1));
     if (keepHistory && command.keepHistory) {
       saveHistory(command, input);
+    } else {
+      saveHistory(command, "", false);
     }
     return command;
   }
