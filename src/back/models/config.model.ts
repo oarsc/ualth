@@ -25,6 +25,22 @@ export interface CopyConfig {
   key: string
 }
 
+export interface JsonBeautifyConfig {
+  key: string
+}
+export interface JsonBeautifyConfigElement {
+  key: string
+  maximize: boolean
+}
+
+export interface XmlBeautifyConfig {
+  key: string
+}
+export interface XmlBeautifyConfigElement {
+  key: string
+  maximize: boolean
+}
+
 export interface FirefoxConfig {
   profileFolder?: string,
   path?: string,

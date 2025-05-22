@@ -32,6 +32,12 @@
 	"copy": {
 		"key": ","
 	},
+	"json": {
+		"key": "json"
+	},
+	"xml": {
+		"key": "xml"
+	},
 	"unixApps": [
 		"/usr/share/applications",
 		"~/.local/share/applications"

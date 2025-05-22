@@ -10,6 +10,8 @@ import HashCommand from "./command-hash";
 import CopyCommand from "./command-copy";
 import UnixAppsCommand from "./command-unix-apps";
 import WindowsStartAppsCommand from "./command-windows-start-apps";
+import JsonBeautifyCommand from "./command-json-beautify";
+import XmlBeautifyCommand from "./command-xml-beautify";
 
 const commandsClasses = [
   SearchEngineCommand,
@@ -22,6 +24,8 @@ const commandsClasses = [
   CopyCommand,
   UnixAppsCommand,
   WindowsStartAppsCommand,
+  JsonBeautifyCommand,
+  XmlBeautifyCommand,
 ]
 
 export default function load(config: Config) {
