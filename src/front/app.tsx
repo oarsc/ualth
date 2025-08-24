@@ -4,7 +4,7 @@ import ItemList from './item-list';
 import { classNames } from './support';
 import { getNumVisibleItems, INPUT_HEIGHT, ITEM_HEIGHT } from './constants-conf';
 import './app.css';
-import { Command, PriorizedSearchResult } from '../shared-models/models';
+import { Command, PriorizedSearchResult, FileBlob } from '../shared-models/models';
 
 const ipcRenderer = window.ipcRenderer;
 
@@ -101,11 +101,11 @@ export default class App extends React.Component<AppProperties, AppState> {
     }
   }
 
-  onSubmitForm = (inputText: string, ev: Event, keepHistory: boolean) => {
+  onSubmitForm = (inputText: string, blobs: Record<string, string | FileBlob>, ev: Event, keepHistory: boolean) => {
     ev.preventDefault();
 
     const { results, resultSelected } = this.state;
-    const result = ipcRenderer.sendSync('perform', results[resultSelected].command.id, inputText, keepHistory);
+    const result = ipcRenderer.sendSync('perform', results[resultSelected].command.id, inputText, blobs, keepHistory);
     if (result) this.hide();
   }
 

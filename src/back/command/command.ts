@@ -1,7 +1,7 @@
 import Config from '../models/config.model';
 import md5 from 'md5';
 import { search } from '../services/search-service';
-import { SearchLevel, SearchResult } from '../../shared-models/models';
+import { SearchLevel, SearchResult, FileBlob} from '../../shared-models/models';
 
 export default class Command {
 
@@ -76,5 +76,5 @@ export default class Command {
     return command;
   }
 
-  perform(argsList?: string[]) {}
+  perform(argsList?: string[], blobs?: Record<string, FileBlob>) {}
 }

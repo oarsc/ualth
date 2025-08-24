@@ -29,7 +29,8 @@ export interface HistoricSearchResult {
 export interface HistoryElement {
   visible: boolean,
   commandId: string,
-  inputText: string
+  inputText: string,
+  blobs: Record<string, string | FileBlob>
 }
 
 export interface HistoryElementReturn extends HistoryElement {
@@ -44,4 +45,11 @@ export interface StyleConfig {
   top?: number,
   width?: number,
   results?: number,
+}
+
+export interface FileBlob {
+  filename: string,
+  path: string | undefined,
+  type: string,
+  base64: string
 }

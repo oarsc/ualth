@@ -19,7 +19,7 @@ export default class ItemList extends React.Component<ItemListProperties, ItemLi
   private selectedItemRef?: Item;
 
   onClickedItem = (item: Command, ev: Event) => {
-    const result = ipcRenderer.sendSync('perform', item.id, '');
+    const result = ipcRenderer.sendSync('perform', item.id, '', {});
     if (result) this.props.hideApp();
     else document.getElementById('input')?.focus();
   }

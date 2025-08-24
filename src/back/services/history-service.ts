@@ -3,10 +3,11 @@ import { homedir } from 'os';
 import { join } from 'path';
 import Command from '../command/command';
 import { commands } from '../config-load';
-import { HistoricSearchResult, SearchLevel, HistoryElement, HistoryElementReturn } from '../../shared-models/models';
+import { HistoricSearchResult, SearchLevel, HistoryElement, HistoryElementReturn, FileBlob } from '../../shared-models/models';
 
 const HISTORIC_PATH = join(homedir(), '.ualthhi');
 const MAX_HISTORY = 10000;
+const MAX_BLOB_SIZE = 100000; // 100kb
 
 if (!fs.existsSync(HISTORIC_PATH)) {
   fs.closeSync(fs.openSync(HISTORIC_PATH, 'w'));
@@ -19,12 +20,13 @@ const historic: HistoryElement[] = (fileName => {
       .split(/\r\n|\n/)
       .filter(notEmptyLine => notEmptyLine)
       .reduce((list, line) => {
-        const matches = `${line}`.match(/^([10]):([^\s]+?):(.*)$/);
-        if (matches && matches.length === 4) {
+        const matches = `${line}`.match(/^([10]):([^\s]+?):(.*):(.*)$/);
+        if (matches && matches.length === 5) {
           list.push({
             visible: matches[1] === '1',
             commandId: matches[2],
-            inputText: matches[3]
+            inputText: matches[3],
+            blobs: JSON.parse(Buffer.from(matches[4], 'base64').toString())
           });
         }
         return list;
@@ -99,7 +101,7 @@ export function removeHistoryByIndex(index: number) {
   }
 }
 
-export function saveHistory(command: Command, input: string, visible: boolean = true): void {
+export function saveHistory(command: Command, input: string, blobs: Record<string, string | FileBlob>, visible: boolean = true): void {
 
   historic
     .map((historicElement, index) => {
@@ -118,7 +120,8 @@ export function saveHistory(command: Command, input: string, visible: boolean = 
   historic.push({
     visible: visible,
     commandId: command.id!,
-    inputText: input
+    inputText: input,
+    blobs: blobs
   });
 
   if (historic.length > MAX_HISTORY) {
@@ -129,8 +132,15 @@ export function saveHistory(command: Command, input: string, visible: boolean = 
 }
 
 function saveFile(): void {
+  const blobsString = (blobs: Record<string, string | FileBlob>) => Buffer.from(JSON.stringify(blobs)).toString('base64') 
+
   const content = historic
-    .map(historicElement => `${historicElement.visible?'1':'0'}:${historicElement.commandId}:${historicElement.inputText}`)
+    .map(historicElement => {
+      const blob = blobsString(historicElement.blobs);
+      return blob.length > MAX_BLOB_SIZE
+        ? `0:${historicElement.commandId}::e30=`
+        : `${historicElement.visible?'1':'0'}:${historicElement.commandId}:${historicElement.inputText}:${blob}`
+    })
     .join('\n');
 
   fs.writeFile(HISTORIC_PATH, content, 'utf-8', err => {

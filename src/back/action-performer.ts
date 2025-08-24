@@ -1,5 +1,5 @@
 import { config, commands } from './config-load';
-import { PriorizedSearchResult, SearchLevel, HistoryElement } from '../shared-models/models';
+import { PriorizedSearchResult, SearchLevel, HistoryElement, FileBlob } from '../shared-models/models';
 import { saveHistory, searchHistory, getHistoryString, removeHistoryByIndex } from './services/history-service';
 import { sortSearchResults } from './services/search-service';
 
@@ -32,18 +32,37 @@ export function match(inputText: string): PriorizedSearchResult[] {
   return sortSearchResults(matches);
 }
 
-export function perform(id: string, input: string, keepHistory: boolean) {
+export function perform(id: string, input: string, blobs: Record<string, string | FileBlob>, keepHistory: boolean) {
   const [ command ] = commands.filter(command => command.id === id);
 
   if (command) {
-    command.perform(input.split(' ').slice(1));
+    const [text, fileBlobs] = resolveTextBlob(input, blobs);
+
+    command.perform(text.split(' ').slice(1), fileBlobs);
     if (keepHistory && command.keepHistory) {
-      saveHistory(command, input);
+      saveHistory(command, input, blobs);
     } else {
-      saveHistory(command, "", false);
+      saveHistory(command, "", {}, false);
     }
     return command;
   }
+}
+
+function resolveTextBlob(value: string, blobs: Record<string, string | FileBlob>): [string, Record<string, FileBlob>] {
+  const remainingBlobs: Record<string, FileBlob> = {};
+
+  const text = Object.entries(blobs)
+    .filter (([key, value]) => {
+      if (typeof value === 'string') {
+        return true;
+      } else {
+        remainingBlobs[key] = value;
+        return false;
+      }
+    })
+    .reduce((text, [key, value]) => text.replace(key, value as string), value);
+
+  return [text, remainingBlobs];
 }
 
 export function resolve(value: string): string {
