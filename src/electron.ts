@@ -22,7 +22,7 @@ function createWindow(): BrowserWindow {
 		width: DIMENSIONS[0],
 		height: DIMENSIONS[1],
 		frame: false,
-		resizable: false,
+		resizable: true,
 		center: (config?.style?.left ?? -1) < 0,
 		alwaysOnTop: true,
 		skipTaskbar: true,
@@ -90,15 +90,19 @@ app.whenReady().then(() => {
 				? (primaryDisplay.bounds.height - DIMENSIONS[1]) / 2 - 200
 				: config?.style?.top ?? 0;
 	
-			win.setBounds({ width, height: DIMENSIONS[1] });
-			win.setPosition(primaryDisplay.bounds.x + x, primaryDisplay.bounds.y + y);
+			win.setBounds({
+				width: width,
+				height: DIMENSIONS[1],
+				x: primaryDisplay.bounds.x + x,
+				y: primaryDisplay.bounds.y + y
+			});
 		}, 10);
 	});
 
 	win.on('blur', () => win.webContents.send('blur'));
 
 	ipcMain.on('hide',          (event) => { win.minimize(); win.hide(); });
-	ipcMain.on('height',        (event, arg) => win.setBounds({ width: DIMENSIONS[0], height: arg }));
+	ipcMain.on('height',        (event, arg) => win.setSize(DIMENSIONS[0], arg));
 	ipcMain.on('removeHistory', (event, arg) => removeHistory(arg));
 	ipcMain.on('perform',       (event, arg, param1, param2, param3) => event.returnValue = perform(arg, param1, param2, param3));
 	ipcMain.on('resolve',       (event, arg) => event.returnValue = resolve(arg));

@@ -43,7 +43,6 @@ export default class App extends React.Component<AppProperties, AppState> {
   resizeWindow(numItems: number) {
     const windowHeight = ITEM_HEIGHT * Math.min(numItems, getNumVisibleItems()) + INPUT_HEIGHT;
     ipcRenderer.send('height', windowHeight);
-    window.scrollTo(0, 0);
   }
 
   hide = () => {
