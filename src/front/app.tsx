@@ -41,7 +41,9 @@ export default class App extends React.Component<AppProperties, AppState> {
   }
 
   resizeWindow(numItems: number) {
-    const windowHeight = ITEM_HEIGHT * Math.min(numItems, getNumVisibleItems()) + INPUT_HEIGHT;
+    const windowHeight = numItems === 0
+      ? INPUT_HEIGHT
+      : INPUT_HEIGHT + ITEM_HEIGHT * Math.min(numItems, getNumVisibleItems()) + 1; // +1 for border
     ipcRenderer.send('height', windowHeight);
   }
 

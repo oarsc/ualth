@@ -186,7 +186,7 @@ export default class InputLauncher extends React.Component<InputLauncherProperti
           if (str.indexOf('\n') >= 0) {
             const key = `[BLOB#${Object.keys(this.blobs).length}: text/plain]`
             this.blobs[key] = str;
-            this.pasteTextToInput(key);
+            this.pasteTextToInput(key); // replace for ⮠??
           } else {
             this.pasteTextToInput(str);
           }

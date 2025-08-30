@@ -16,10 +16,11 @@
   "homepage": "./",
   "scripts": {
     "build:b": "tsc",
+    "build": "tsc && react-scripts build",
     "dev": "concurrently -k \"cross-env BROWSER=none npm start\" \"npm:electron\"",
     "electron": "wait-on tcp:3000 && electron-forge start",
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build:f": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "package": "react-scripts build && electron-forge package",
