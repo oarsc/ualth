@@ -232,14 +232,19 @@ export default class InputLauncher extends React.Component<InputLauncherProperti
   override render(): JSX.Element {
     return (
       <form id="launcher-input">
-        <input autoFocus
-          id="input"
-          type="text"
-          name="action"
-          onChange={ this.onKeyPress }
-          onKeyDown={ this.onKeyDown }
-          onPaste={ this.onPaste }
-          ref={ input => this.input = input! } />
+        <div>
+          <div className='icon'>
+            <img src='run.png'/>
+          </div>
+          <input autoFocus
+            id="input"
+            type="text"
+            name="action"
+            onChange={ this.onKeyPress }
+            onKeyDown={ this.onKeyDown }
+            onPaste={ this.onPaste }
+            ref={ input => this.input = input! } />
+        </div>
       </form>
     );
   }

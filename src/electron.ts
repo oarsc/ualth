@@ -48,6 +48,8 @@ function createWindow(): BrowserWindow {
 			: `file://${join(__dirname, "../build/index.html")}`
 	);
 
+	win.on('show', () => win.focus());
+
 	//if (isDev) {
 	//	win.webContents.openDevTools({ mode: "detach" });
 	//}

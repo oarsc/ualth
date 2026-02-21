@@ -40,6 +40,7 @@ export interface HistoryElementReturn extends HistoryElement {
 export interface StyleConfig {
   radius?: number,
   background?: string,
+  iconColor?: string,
   selected?: string,
   left?: number,
   top?: number,

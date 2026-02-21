@@ -14,6 +14,7 @@ const setStyle = (key: string, value: string) => document.documentElement.style.
 const styles = window.ipcRenderer.sendSync<StyleConfig>('styleConfig');
 if (styles.radius !== undefined) setStyle('radius', `${styles.radius}px`);
 if (styles.background)           setStyle('background', styles.background);
+if (styles.iconColor)            setStyle('icon-color', styles.iconColor);
 if (styles.selected)             setStyle('selected', styles.selected);
 
 if (styles.results)              setNumVisibleItems(styles.results);
