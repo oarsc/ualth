@@ -12,7 +12,7 @@ import { search } from "../services/search-service";
 
 interface Application {
   name: string;
-  icon?: string;
+  icon: string;
   exec: string;
   keywords: string[];
 }
@@ -41,7 +41,7 @@ export default class UnixAppsCommand extends Command {
     this.keywords = data.keywords;
     this.keyWord = data.name;
     this.title = data.name;
-    this.icon = 'exec';
+    this.icon = data.icon;
     this.exec = data.exec;
     this.generateId();
   }
@@ -131,8 +131,43 @@ function readApplication(dir: string): Application[] {
       return {
         name: appData.Name,
         exec: appData.Exec,
-        icon: appData.Icon,
+        icon: resolveIcon(appData as any) || 'exec',
         keywords
       }
     });
+}
+
+function resolveIcon(appData: Record<string, string>): string | undefined {
+  const iconName = appData.Icon as string | undefined;
+  if (!iconName) return;
+
+  if (iconName.includes('${SNAP}')) {
+    const snapName = appData['X-SnapAppName'];
+    return iconName.replace('${SNAP}', `/snap/${snapName}/current`);
+  }
+
+  if (iconName.startsWith('/') && fs.existsSync(iconName)) {
+    return iconToBase64(iconName);
+  }
+
+  const iconDirs = [
+    '/usr/share/icons/hicolor/48x48/apps',
+    '/usr/share/icons/hicolor/256x256/apps',
+    '/usr/share/pixmaps',
+    path.join(homedir(), '.local/share/icons/hicolor/48x48/apps')
+  ];
+
+  for (const dir of iconDirs) {
+    const pngPath = path.join(dir, iconName + '.png');
+    const svgPath = path.join(dir, iconName + '.svg');
+
+    if (fs.existsSync(pngPath)) return iconToBase64(pngPath);
+    if (fs.existsSync(svgPath)) return iconToBase64(svgPath);
+  }
+}
+
+function iconToBase64(filePath: string): string {
+  const ext = filePath.endsWith('.svg') ? 'svg+xml' : 'png';
+  const buffer = fs.readFileSync(filePath);
+  return `data:image/${ext};base64,${buffer.toString('base64')}`;
 }
