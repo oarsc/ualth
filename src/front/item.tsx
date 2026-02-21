@@ -50,6 +50,10 @@ export default class Item extends React.Component<ItemProperties, ItemState> {
       .replace(/{i}(.*?){\/i}/gsm, '<i>$1</i>')
       ?? item.title;
 
+    const subtitle = item.subtitle
+      ? <div className='subtitle' dangerouslySetInnerHTML={{__html: item.subtitle}}></div>
+      : undefined;
+
     return (
       <div
         className={ classNames(['item', 'selected', 'arguments'], [true, selected, item.requiresParams]) }
@@ -60,7 +64,10 @@ export default class Item extends React.Component<ItemProperties, ItemState> {
           <div className='icon'>
             <img src={ icon } alt=''/>
           </div>
-          <span dangerouslySetInnerHTML={{__html: title}}></span>
+          <div className='title'>
+            <div dangerouslySetInnerHTML={{__html: title}}></div>
+            {subtitle}
+          </div>
         </div>
 
       </div>

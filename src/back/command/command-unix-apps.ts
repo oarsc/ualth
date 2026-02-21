@@ -41,6 +41,7 @@ export default class UnixAppsCommand extends Command {
     this.keywords = data.keywords;
     this.keyWord = data.name;
     this.title = data.name;
+    this.subtitle = "Application"
     this.icon = data.icon;
     this.exec = data.exec;
     this.generateId();

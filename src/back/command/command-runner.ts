@@ -22,6 +22,7 @@ export default class RunnerCommand extends Command {
     super('RunnerCommand');
 
     this.title = data.key;
+    this.subtitle = "Command"
     this.keyWord = data.key;
     this.command = data.command;
     this.noParamsCommand = data.noParams?.command;

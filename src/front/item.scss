@@ -51,3 +51,14 @@ $selectedBackground: var(--selected, #4a4a4a);
 .item .icon img {
   max-width: 32px;
 }
+
+.item .title {
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.item .subtitle {
+  font-size: 0.75em;
+  color: gray;
+}
