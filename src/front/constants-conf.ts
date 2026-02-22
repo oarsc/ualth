@@ -9,4 +9,4 @@ export function setNumVisibleItems(value: number) {
 }
 
 export const INPUT_HEIGHT = 50;
-export const ITEM_HEIGHT = 40;
+export const ITEM_HEIGHT = 46;

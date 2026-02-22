@@ -1,6 +1,18 @@
+/* ibm-plex-sans-regular - latin_latin-ext */
+@font-face {
+  font-display: swap;
+  font-family: 'IBM Plex Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../../public/font/ibm-plex-sans-v23-latin_latin-ext-regular.woff2') format('woff2');
+}
+
+body, input {
+  font-family: 'IBM Plex Sans', 'Arial';
+}
+
 body {
   margin: 0;
-  font-family: Arial;
   overflow: hidden;
 }
 

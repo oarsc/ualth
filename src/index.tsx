@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './front/app';
 import { StyleConfig } from './shared-models/models';
-import { setNumVisibleItems } from './front/constants-conf';
+import { INPUT_HEIGHT, ITEM_HEIGHT, setNumVisibleItems } from './front/constants-conf';
 
 ReactDOM.render(
 	<App />,
@@ -18,3 +18,6 @@ if (styles.iconColor)            setStyle('icon-color', styles.iconColor);
 if (styles.selected)             setStyle('selected', styles.selected);
 
 if (styles.results)              setNumVisibleItems(styles.results);
+
+setStyle('item-height', `${ITEM_HEIGHT}px`);
+setStyle('input-height', `${INPUT_HEIGHT}px`);

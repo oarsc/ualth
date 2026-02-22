@@ -1,9 +1,10 @@
+$itemHeight: var(--item-height, 46px);
 $background: var(--background, #333);
 $selectedBackground: var(--selected, #4a4a4a);
 
 .item {
   overflow: hidden;
-  height: 40px;
+  height: $itemHeight;
   margin: 0;
   border: 0;
   padding: 0 15px;
