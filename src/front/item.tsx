@@ -31,11 +31,14 @@ export default class Item extends React.Component<ItemProperties, ItemState> {
   override render(): JSX.Element {
     const { item, matchingIndexes, selected } = this.props;
 
-    const icon = (icon =>
-      (icon.match(/https?:\/\//) || icon.match(/data?:image\//))
-        ? icon
-        : icon? `./icons/${icon}.png` : defaultIcon
-    )(item.icon);
+    const icon = (icon => {
+      if (!icon) return defaultIcon;
+      // Support links
+      if (icon.match(/https?:\/\//) || icon.match(/data:image\//)) return icon;
+      // Support absolute file paths (Windows C:\ or Unix /)
+      if (icon.match(/^[A-Za-z]:[\\/]/) || icon.startsWith('/')) return `file://${icon}`;
+      return `./icons/${icon}.png`;
+    })(item.icon);
 
     const title = matchingIndexes?.slice().reverse()
       .reduce((title, [startIndex, endIndex]) =>

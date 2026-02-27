@@ -103,6 +103,7 @@ export default interface Config {
   infoSaver?: SaverConfig,
   copy?: CopyConfig,
   unixApps?: string[],
+  windowsApps: string[],
   firefoxBookmarks?: FirefoxConfig,
   chromeBookmarks?: ChromeConfig,
   searchEngines?: SearchEngineConfig[],
