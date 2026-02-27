@@ -54,6 +54,7 @@
 		"C:\\ProgramData\\Microsoft\\Windows\\Start Menu",
 		"%AppData%\\Microsoft\\Windows\\Start Menu"
 	],
+	"windowsUwpApps": true,
 	"firefoxBookmarks": {
 		"profileFolder": "",
 		"path": "",

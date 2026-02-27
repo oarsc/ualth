@@ -104,6 +104,7 @@ export default interface Config {
   copy?: CopyConfig,
   unixApps?: string[],
   windowsApps: string[],
+  windowsUwpApps?: boolean,
   firefoxBookmarks?: FirefoxConfig,
   chromeBookmarks?: ChromeConfig,
   searchEngines?: SearchEngineConfig[],
