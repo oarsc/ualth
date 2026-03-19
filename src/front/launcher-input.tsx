@@ -158,7 +158,7 @@ export default class InputLauncher extends React.Component<InputLauncherProperti
         event.preventDefault();
         event.stopPropagation();
 
-        const file = item.getAsFile();
+        const file: any = item.getAsFile();
         if (file) {
           const reader = new FileReader();
           reader.onload = () => {
@@ -169,7 +169,7 @@ export default class InputLauncher extends React.Component<InputLauncherProperti
 
             this.blobs[key] = {
               filename: file.name,
-              path: file.path? file.path : undefined,
+              path: file.path || undefined,
               type: file.type,
               base64: base64Data
             };
