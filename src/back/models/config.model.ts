@@ -89,7 +89,7 @@ export interface CommandRunConfig {
     command: string,
     arguments?: string,
   }
-  workingDir: string,
+  workingDir?: string,
   icon?: string,
 }
 

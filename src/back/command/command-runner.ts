@@ -21,14 +21,16 @@ export default class RunnerCommand extends Command {
   constructor(data: CommandRunConfig) {
     super('RunnerCommand');
 
+    const userDir = homedir();
+
     this.title = data.key;
     this.subtitle = "Command"
     this.keyWord = data.key;
-    this.command = data.command;
-    this.noParamsCommand = data.noParams?.command;
+    this.command = data.command.replace('~', userDir);
+    this.noParamsCommand = data.noParams?.command.replace('~', userDir);
     this.noParamsArgs = data.noParams?.arguments;
     this.args = data.arguments;
-    this.workingDir = data.workingDir;
+    this.workingDir = data.workingDir?.replace('~', userDir) ?? userDir;
     this.requiresParams = this.args?.match(PARAMS_REGEX)? true : false;
     this.icon = data.icon || 'terminal';
     this.generateId();
@@ -59,7 +61,7 @@ export default class RunnerCommand extends Command {
     const options: SpawnOptionsWithoutStdio = { detached: true };
 
     if (this.workingDir) {
-      options.cwd = this.workingDir.replace('~', homedir());
+      options.cwd = this.workingDir;
     }
 
     const [command, params] = (({requiresParams, command, args, noParamsCommand, noParamsArgs}) => {
