@@ -1,3 +1,4 @@
+import { FileBlob } from '../../shared-models/models';
 import { JsonBeautifyConfig, JsonBeautifyConfigElement } from "../models/config.model";
 import { clipboard } from 'electron';
 import Command from './command';
@@ -39,10 +40,21 @@ export default class JsonBeautifyCommand extends Command {
     ]
   }
 
-  override perform(argsList: string[]) {
-    if (argsList.length) {
-      const value = argsList.join(' ');
+  override perform(argsList: string[], blobs?: Record<string, FileBlob>) {
+    if (blobs) {
+      const file = Object.values(blobs).find(file => file.type === 'application/json');
+      if (file) {
+        this.resolve(Buffer.from(file.base64, 'base64').toString());
+        return;
+      }
+    }
 
+    if (argsList.length) {
+      this.resolve(argsList.join(' '));
+    }
+  }
+
+  private resolve(value: string): boolean {
       try {
         if (this.maximize) {
           clipboard.writeText(
@@ -53,7 +65,8 @@ export default class JsonBeautifyCommand extends Command {
             JSON.stringify(JSON.parse(value))
           );
         }
+        return true;
       } catch (e) {}
-    }
+      return false;
   }
 }
