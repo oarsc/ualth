@@ -1,3 +1,4 @@
+import { FileBlob } from '../../shared-models/models';
 import { XmlBeautifyConfig, XmlBeautifyConfigElement } from "../models/config.model";
 import { clipboard } from 'electron';
 import Command from './command';
@@ -41,10 +42,21 @@ export default class XmlBeautifyCommand extends Command {
     ]
   }
 
-  override perform(argsList: string[]) {
-    if (argsList.length) {
-      const value = argsList.join(' ');
+  override perform(argsList: string[], blobs?: Record<string, FileBlob>) {
+    if (blobs) {
+      const file = Object.values(blobs).find(file => file.type === 'text/xml');
+      if (file) {
+        this.resolve(Buffer.from(file.base64, 'base64').toString());
+        return;
+      }
+    }
 
+    if (argsList.length) {
+      this.resolve(argsList.join(' '));
+    }
+  }
+
+  private resolve(value: string): boolean {
       try {
         if (this.maximize) {
           clipboard.writeText(
@@ -55,7 +67,8 @@ export default class XmlBeautifyCommand extends Command {
             value.replace(/>\s+</g, '><').trim()
           );
         }
+        return true;
       } catch (e) {}
-    }
+      return false;
   }
 }
