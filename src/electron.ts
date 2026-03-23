@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, globalShortcut, dialog, screen } from 'electron';
+import { app, BrowserWindow, clipboard, ipcMain, globalShortcut, dialog, screen } from 'electron';
 import { join } from 'path';
 import isDev from 'electron-is-dev';
 // TODO: include the dev tools installer to load React Dev Tools?
@@ -50,6 +50,7 @@ function createWindow(): BrowserWindow {
 	);
 
 	win.on('show', () => win.focus());
+	win.on('close', () => app.quit());
 
 	//if (isDev) {
 	//	win.webContents.openDevTools({ mode: "detach" });
@@ -112,6 +113,17 @@ app.whenReady().then(() => {
 	ipcMain.on('find',          (event, arg) => event.returnValue = match(arg));
 	ipcMain.on('history',       (event, arg, param1, param2) => event.returnValue = historyString(arg, param1, param2));
 	ipcMain.on('styleConfig',   (event, arg) => event.returnValue = config?.style ?? {});
+
+	ipcMain.on('pick-color', (event, colorValue: string) => {
+		clipboard.writeText(colorValue);
+		const captureWin = BrowserWindow.fromWebContents(event.sender);
+		if (captureWin) captureWin.destroy();
+	});
+
+	ipcMain.on('cancel-capture', (event) => {
+		const captureWin = BrowserWindow.fromWebContents(event.sender);
+		if (captureWin) captureWin.destroy();
+	});
 });
 
 // Quit when all windows are closed, except on macOS. There, it's common

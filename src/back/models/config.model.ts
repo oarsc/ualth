@@ -29,6 +29,10 @@ export interface UuidConfig {
   key: string
 }
 
+export interface ColorConfig {
+  key: string
+}
+
 export interface HtmlEntitiesConfig {
   key: string
 }
@@ -106,6 +110,7 @@ export default interface Config {
   hash?: HashConfig,
   infoSaver?: SaverConfig,
   copy?: CopyConfig,
+  color?: ColorConfig,
   unixApps?: string[],
   windowsApps: string[],
   windowsUwpApps?: boolean,
