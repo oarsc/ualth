@@ -7,5 +7,9 @@ declare global {
       sendSync: <T>(channel: string, ...args: any[]) => T;
       send: (channel: string, ...args: any[]) => void;
     }
+
+    init: {
+      getMode: () => string;
+    }
   }
 }

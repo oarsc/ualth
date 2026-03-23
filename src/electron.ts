@@ -50,6 +50,7 @@ function createWindow(): BrowserWindow {
 	);
 
 	win.on('show', () => win.focus());
+	win.on('close', () => app.quit());
 
 	//if (isDev) {
 	//	win.webContents.openDevTools({ mode: "detach" });

@@ -9,6 +9,7 @@ import InternalCommand from "./command-internal";
 import HashCommand from "./command-hash";
 import CopyCommand from "./command-copy";
 import UuidCommand from "./command-uuid";
+import ColorCommand from "./command-color";
 import UnixAppsCommand from "./command-unix-apps";
 import WindowsStartAppsCommand from "./command-windows-start-apps";
 import WindowsUwpAppsCommand from "./command-windows-uwp-apps";
@@ -27,6 +28,7 @@ const commandsClasses = [
   HashCommand,
   CopyCommand,
   UuidCommand,
+  ColorCommand,
   UnixAppsCommand,
   WindowsStartAppsCommand,
   WindowsUwpAppsCommand,

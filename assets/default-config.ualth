@@ -36,6 +36,9 @@
 	"uuid": {
 		"key": "uuid"
 	},
+	"color": {
+		"key": "color"
+	},
 	"entities": {
 		"key": "ent"
 	},

@@ -4,20 +4,30 @@ import App from './front/app';
 import { StyleConfig } from './shared-models/models';
 import { INPUT_HEIGHT, ITEM_HEIGHT, setNumVisibleItems } from './front/constants-conf';
 
-ReactDOM.render(
-	<App />,
-	document.getElementById('root')
-);
+const mode = window.init.getMode();
 
+if (mode == 'capture') {
+	window.ipcRenderer.receive('set-image', (content: any) => {
+		const img = document.createElement("img");
+		img.src = content;
+		document.body.append(img);
+	});
 
-const setStyle = (key: string, value: string) => document.documentElement.style.setProperty(`--${key}`, value);
-const styles = window.ipcRenderer.sendSync<StyleConfig>('styleConfig');
-if (styles.radius !== undefined) setStyle('radius', `${styles.radius}px`);
-if (styles.background)           setStyle('background', styles.background);
-if (styles.iconColor)            setStyle('icon-color', styles.iconColor);
-if (styles.selected)             setStyle('selected', styles.selected);
+} else {
+	ReactDOM.render(
+		<App />,
+		document.getElementById('root')
+	);
 
-if (styles.results)              setNumVisibleItems(styles.results);
+	const setStyle = (key: string, value: string) => document.documentElement.style.setProperty(`--${key}`, value);
+	const styles = window.ipcRenderer.sendSync<StyleConfig>('styleConfig');
+	if (styles.radius !== undefined) setStyle('radius', `${styles.radius}px`);
+	if (styles.background)           setStyle('background', styles.background);
+	if (styles.iconColor)            setStyle('icon-color', styles.iconColor);
+	if (styles.selected)             setStyle('selected', styles.selected);
 
-setStyle('item-height', `${ITEM_HEIGHT}px`);
-setStyle('input-height', `${INPUT_HEIGHT}px`);
+	if (styles.results)              setNumVisibleItems(styles.results);
+
+	setStyle('item-height', `${ITEM_HEIGHT}px`);
+	setStyle('input-height', `${INPUT_HEIGHT}px`);
+}
