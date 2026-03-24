@@ -25,6 +25,10 @@ export interface CopyConfig {
   key: string
 }
 
+export interface UuidConfig {
+  key: string
+}
+
 export interface HtmlEntitiesConfig {
   key: string
 }

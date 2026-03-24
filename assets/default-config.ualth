@@ -33,6 +33,9 @@
 	"copy": {
 		"key": ","
 	},
+	"uuid": {
+		"key": "uuid"
+	},
 	"entities": {
 		"key": "ent"
 	},
@@ -92,7 +95,7 @@
 			"noParams": {
 				"command": "__DEFAULT__",
 				"arguments": "."
-			}
+			},
 			"icon": "ualth"
 		}
 	]
