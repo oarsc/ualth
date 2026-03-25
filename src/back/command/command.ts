@@ -17,7 +17,7 @@ export default class Command {
   keyWord = '';
   title = '';
   subtitle = '';
-  icon = '';
+  icon = 'default';
   command = '';
   fixedPriority?: number;
   

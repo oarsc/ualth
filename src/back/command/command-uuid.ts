@@ -12,8 +12,6 @@ export default class UuidCommand extends Command {
     this.title = 'Generate UUID';
     this.keyWord = data.key;
     this.subtitle = uuidv4();
-
-    this.icon = 'ualth';
     this.generateId();
   }
 

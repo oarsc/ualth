@@ -234,7 +234,7 @@ export default class InputLauncher extends React.Component<InputLauncherProperti
       <form id="launcher-input">
         <div>
           <div className='icon'>
-            <img src='run.png'/>
+            <img src='ualth.png'/>
           </div>
           <input autoFocus
             id="input"
