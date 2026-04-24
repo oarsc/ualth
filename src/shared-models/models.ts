@@ -54,3 +54,10 @@ export interface FileBlob {
   type: string,
   base64: string
 }
+
+export interface NotificationPayload {
+  title: string,
+  body: string,
+  severity?: 'info' | 'success' | 'warning' | 'error',
+  duration?: number,
+}

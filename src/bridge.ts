@@ -12,7 +12,7 @@ contextBridge.exposeInMainWorld(
 contextBridge.exposeInMainWorld(
 	'ipcRenderer', {
 		send: (channel: string, ...data: any[]) => {
-			const validChannels = ['hide', 'height', 'removeHistory', 'pick-color', 'cancel-capture'];
+			const validChannels = ['hide', 'height', 'removeHistory', 'close-notification', 'pick-color', 'cancel-capture'];
 			if (validChannels.includes(channel)) {
 				ipcRenderer.send(channel, ...data);
 			}
@@ -24,7 +24,7 @@ contextBridge.exposeInMainWorld(
 			}
 		},
 		receive: (channel: string, func: (...args: any[]) => void) => {
-			const validChannels = ['show', 'blur', 'set-image'];
+			const validChannels = ['show', 'blur', 'set-image', 'show-notification'];
 			if (validChannels.includes(channel)) {
 				// Deliberately strip event as it includes `sender` 
 				ipcRenderer.on(channel, (event, ...args) => func(...args));

@@ -9,6 +9,12 @@ initialize(mode);
 
 async function initialize(mode: string) {
   switch (mode) {
+    case 'notification':
+      const { default: Notification } = await import('./front/component/notification/notification');
+
+      ReactDOM.render(<Notification />, document.getElementById('root'));
+      break;
+
     case 'capture':
       const { default: CaptureOverlay } = await import('./front/component/capture/CaptureOverlay');
 
