@@ -23,6 +23,12 @@ async function initialize(mode: string) {
       });
       break;
 
+    case 'claude-response':
+      const { default: ClaudeResponse } = await import('./front/component/claude-response/claude-response');
+
+      ReactDOM.render(<ClaudeResponse />, document.getElementById('root'));
+      break;
+
     default:
       const { default: App } = await import('./front/app');
       

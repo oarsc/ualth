@@ -114,20 +114,13 @@ app.whenReady().then(() => {
 	ipcMain.on('history',       (event, arg, param1, param2) => event.returnValue = historyString(arg, param1, param2));
 	ipcMain.on('styleConfig',   (event, arg) => event.returnValue = config?.style ?? {});
 
-	ipcMain.on('close-notification', (event) => {
-		const notifWin = BrowserWindow.fromWebContents(event.sender);
-		if (notifWin) notifWin.destroy();
+	ipcMain.on('close-window', (event) => {
+		BrowserWindow.fromWebContents(event.sender)?.destroy();
 	});
 
 	ipcMain.on('pick-color', (event, colorValue: string) => {
 		clipboard.writeText(colorValue);
-		const captureWin = BrowserWindow.fromWebContents(event.sender);
-		if (captureWin) captureWin.destroy();
-	});
-
-	ipcMain.on('cancel-capture', (event) => {
-		const captureWin = BrowserWindow.fromWebContents(event.sender);
-		if (captureWin) captureWin.destroy();
+		BrowserWindow.fromWebContents(event.sender)?.destroy();
 	});
 });
 

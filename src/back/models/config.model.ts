@@ -33,6 +33,10 @@ export interface ColorConfig {
   key: string
 }
 
+export interface ClaudeConfig {
+  key: string
+}
+
 export interface DebugConfig {
   key: string
 }
@@ -115,6 +119,7 @@ export default interface Config {
   infoSaver?: SaverConfig,
   copy?: CopyConfig,
   color?: ColorConfig,
+  claude?: ClaudeConfig,
   debug?: DebugConfig,
   unixApps?: string[],
   windowsApps: string[],

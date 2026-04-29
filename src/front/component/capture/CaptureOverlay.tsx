@@ -140,7 +140,7 @@ export default class CaptureOverlay extends React.Component<CaptureOverlayProper
 
   handleKeyDown = (e: KeyboardEvent) => {
     if (e.key === 'Escape') {
-      ipcRenderer.send('cancel-capture');
+      ipcRenderer.send('close-window');
     } else if (e.key === 'f' || e.key === 'F') {
       this.setState(s => ({
         format: s.format === 'hex' ? 'rgb' : s.format === 'rgb' ? 'hsl' : 'hex'

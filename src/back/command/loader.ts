@@ -10,6 +10,7 @@ import HashCommand from "./command-hash";
 import CopyCommand from "./command-copy";
 import UuidCommand from "./command-uuid";
 import ColorCommand from "./command-color";
+import ClaudeCommand from "./command-claude";
 import DebugCommand from "./command-dev-debug";
 import UnixAppsCommand from "./command-unix-apps";
 import WindowsStartAppsCommand from "./command-windows-start-apps";
@@ -30,6 +31,7 @@ const commandsClasses = [
   CopyCommand,
   UuidCommand,
   ColorCommand,
+  ClaudeCommand,
   DebugCommand,
   UnixAppsCommand,
   WindowsStartAppsCommand,

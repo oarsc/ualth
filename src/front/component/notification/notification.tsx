@@ -48,7 +48,7 @@ export default class Notification extends React.Component<NotificationProperties
       clearTimeout(this.dismissTimer);
       this.dismissTimer = null;
     }
-    window.ipcRenderer.send('close-notification');
+    window.ipcRenderer.send('close-window');
   };
 
   override render() {

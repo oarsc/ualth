@@ -61,3 +61,8 @@ export interface NotificationPayload {
   severity?: 'info' | 'success' | 'warning' | 'error',
   duration?: number,
 }
+
+export interface ClaudeResponsePayload {
+  title: string,
+  query: string,
+}
