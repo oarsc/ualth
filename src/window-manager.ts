@@ -3,12 +3,7 @@ import { join } from 'path';
 import isDev from 'electron-is-dev';
 import { ClaudeResponsePayload, NotificationPayload } from './shared-models/models';
 
-const NOTIFICATION_WIDTH = 320;
-const NOTIFICATION_HEIGHT = 90;
-const NOTIFICATION_MARGIN = 20;
-
-const CLAUDE_RESPONSE_WIDTH = 640;
-const CLAUDE_RESPONSE_HEIGHT = 420;
+// [#] EYEDROPPER WINDOW
 
 export function createCaptureWindow(nativeImage: NativeImage, width: number, height: number): Promise<BrowserWindow> {
   const win = new BrowserWindow({
@@ -34,10 +29,32 @@ export function createCaptureWindow(nativeImage: NativeImage, width: number, hei
   }, true);
 }
 
+// [#] NOTIFICATION WINDOW
+
+const NOTIFICATION_WIDTH = 320;
+const NOTIFICATION_HEIGHT = 90;
+const NOTIFICATION_MARGIN = 20;
+
+const activeNotificationWindows: BrowserWindow[] = [];
+
+function computeNotificationY(index: number): number {
+  const { bounds } = screen.getPrimaryDisplay();
+  return bounds.y + bounds.height - NOTIFICATION_HEIGHT - NOTIFICATION_MARGIN - index * (NOTIFICATION_HEIGHT + NOTIFICATION_MARGIN);
+}
+
+function reflowNotificationWindows(): void {
+  const { bounds } = screen.getPrimaryDisplay();
+  const x = bounds.x + bounds.width - NOTIFICATION_WIDTH - NOTIFICATION_MARGIN;
+  activeNotificationWindows.forEach((win, i) => {
+    win.setPosition(x, computeNotificationY(i));
+  });
+}
+
 export function createNotificationWindow(payload: NotificationPayload): Promise<BrowserWindow> {
   const { bounds } = screen.getPrimaryDisplay();
   const x = bounds.x + bounds.width - NOTIFICATION_WIDTH - NOTIFICATION_MARGIN;
-  const y = bounds.y + bounds.height - NOTIFICATION_HEIGHT - NOTIFICATION_MARGIN;
+  const index = activeNotificationWindows.length;
+  const y = computeNotificationY(index);
 
   const win = new BrowserWindow({
     width: NOTIFICATION_WIDTH,
@@ -50,6 +67,7 @@ export function createNotificationWindow(payload: NotificationPayload): Promise<
     skipTaskbar: true,
     autoHideMenuBar: true,
     movable: false,
+    focusable: false,
     show: false,
     transparent: true,
     webPreferences: {
@@ -61,10 +79,22 @@ export function createNotificationWindow(payload: NotificationPayload): Promise<
     },
   });
 
+  activeNotificationWindows.push(win);
+  win.on('closed', () => {
+    const idx = activeNotificationWindows.indexOf(win);
+    if (idx !== -1) activeNotificationWindows.splice(idx, 1);
+    reflowNotificationWindows();
+  });
+
   return openWindow(win, () => {
     win.webContents.send('show-notification', payload);
   });
 }
+
+// [#] CLAUDE RESPONSE WINDOW
+
+const CLAUDE_RESPONSE_WIDTH = 640;
+const CLAUDE_RESPONSE_HEIGHT = 420;
 
 export function createClaudeResponseWindow(payload: ClaudeResponsePayload): Promise<BrowserWindow> {
   const { bounds } = screen.getPrimaryDisplay();
@@ -97,6 +127,8 @@ export function createClaudeResponseWindow(payload: ClaudeResponsePayload): Prom
     win.webContents.send('claude-response-init', payload);
   });
 }
+
+// [#] COMMON
 
 function openWindow(window: BrowserWindow, onLoad: () => void, startHidden: boolean = false): Promise<BrowserWindow> {
   window.loadURL(
