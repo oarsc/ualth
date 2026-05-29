@@ -5,7 +5,7 @@ import fs from "fs";
 import path from "path";
 import Command from "./command";
 import { spawn } from "child_process";
-import { createNotificationWindow, createClaudeResponseWindow } from "../../window-manager";
+import { createNotificationWindow, createClaudeResponseWindow, createLoadingWindow, stopLoadingWindow } from "../../window-manager";
 
 export default class ClaudeCommand extends Command {
   static label = 'claude';
@@ -37,10 +37,7 @@ export default class ClaudeCommand extends Command {
       argsList.join(' ')
     );
 
-    createNotificationWindow({
-      title: "Claude",
-      body: "Processing query...",
-    });
+    createLoadingWindow();
 
     this.openClaudeWindowAndSpawn(folder, query)
   }
@@ -61,6 +58,7 @@ export default class ClaudeCommand extends Command {
     );
 
     result.stdout.on('data', (data) => {
+      stopLoadingWindow();
       win.webContents.send('claude-response-chunk', `${data}`);
     });
 
@@ -86,6 +84,7 @@ export default class ClaudeCommand extends Command {
     if (win && !win.isDestroyed()) {
       win.webContents.send('claude-response-error', 'An error occurred');
     }
+    stopLoadingWindow();
     createNotificationWindow({
       title: "Claude",
       body: "An error occurred",

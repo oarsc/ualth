@@ -1,4 +1,4 @@
-import { createNotificationWindow } from "../../window-manager";
+import { createLoadingWindow, stopLoadingWindow } from "../../window-manager";
 import { DebugConfig } from "../models/config.model";
 import Command from "./command";
 
@@ -17,10 +17,10 @@ export default class DebugCommand extends Command {
   }
 
   override perform() {
-    createNotificationWindow({
-      title: "Title",
-      body: "Testing",
-      severity: 'warning'
+    createLoadingWindow().then(() => {
+      setTimeout(() => {
+        stopLoadingWindow();
+      }, 6000);
     });
   }
 }

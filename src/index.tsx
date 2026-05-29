@@ -15,6 +15,12 @@ async function initialize(mode: string) {
       ReactDOM.render(<Notification />, document.getElementById('root'));
       break;
 
+    case 'loading':
+      const { default: Loading } = await import('./front/component/loading/loading');
+
+      ReactDOM.render(<Loading/>, document.getElementById('root'));
+      break;
+
     case 'capture':
       const { default: CaptureOverlay } = await import('./front/component/capture/CaptureOverlay');
 

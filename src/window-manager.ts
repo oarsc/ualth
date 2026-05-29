@@ -3,30 +3,60 @@ import { join } from 'path';
 import isDev from 'electron-is-dev';
 import { ClaudeResponsePayload, NotificationPayload } from './shared-models/models';
 
-// [#] EYEDROPPER WINDOW
 
-export function createCaptureWindow(nativeImage: NativeImage, width: number, height: number): Promise<BrowserWindow> {
-  const win = new BrowserWindow({
-    width: width,
-    height: height,
+// [#] LOADING WINDOW
 
+const LOADING_WIDTH = 75;
+const LOADING_HEIGHT = 75;
+const LOADING_RIGHT_MARGIN = 50;
+const LOADING_BOTTOM_MARGIN = 50;
+
+let loadingCount = 0;
+let activeLoadingWindow: BrowserWindow | undefined = undefined;
+
+export function createLoadingWindow(): Promise<BrowserWindow> {
+  if (activeLoadingWindow) {
+    loadingCount++;
+    return Promise.resolve(activeLoadingWindow);
+  }
+
+  const { bounds } = screen.getPrimaryDisplay();
+  const x = bounds.x + bounds.width - LOADING_WIDTH - LOADING_RIGHT_MARGIN;
+  const y = bounds.y + bounds.height - LOADING_HEIGHT - LOADING_BOTTOM_MARGIN;
+
+  loadingCount = 1;
+  activeLoadingWindow = new BrowserWindow({
+    width: LOADING_WIDTH,
+    height: LOADING_HEIGHT,
+    x,
+    y,
     frame: false,
     resizable: false,
-    center: true,
     alwaysOnTop: true,
     skipTaskbar: true,
     autoHideMenuBar: true,
     movable: false,
-
+    focusable: false,
+    show: false,
+    transparent: true,
     webPreferences: {
-      preload: __dirname + '/bridge.js',
-      additionalArguments: ['--mode=capture']
-    }
+      sandbox: false,
+      nodeIntegration: false,
+      contextIsolation: true,
+      preload: join(__dirname, './bridge.js'),
+      additionalArguments: ['--mode=loading'],
+    },
   });
 
-  return openWindow(win, () => {
-    win.webContents.send('set-image', nativeImage.toDataURL());
-  }, true);
+  return openWindow(activeLoadingWindow);
+}
+
+export function stopLoadingWindow() {
+  if (activeLoadingWindow && (--loadingCount <= 0)) {
+    activeLoadingWindow.destroy();
+    activeLoadingWindow = undefined;
+    loadingCount = 0;
+  }
 }
 
 // [#] NOTIFICATION WINDOW
@@ -92,6 +122,32 @@ export function createNotificationWindow(payload: NotificationPayload): Promise<
   });
 }
 
+// [#] EYEDROPPER WINDOW
+
+export function createCaptureWindow(nativeImage: NativeImage, width: number, height: number): Promise<BrowserWindow> {
+  const win = new BrowserWindow({
+    width: width,
+    height: height,
+
+    frame: false,
+    resizable: false,
+    center: true,
+    alwaysOnTop: true,
+    skipTaskbar: true,
+    autoHideMenuBar: true,
+    movable: false,
+
+    webPreferences: {
+      preload: __dirname + '/bridge.js',
+      additionalArguments: ['--mode=capture']
+    }
+  });
+
+  return openWindow(win, () => {
+    win.webContents.send('set-image', nativeImage.toDataURL());
+  }, true);
+}
+
 // [#] CLAUDE RESPONSE WINDOW
 
 const CLAUDE_RESPONSE_WIDTH = 640;
@@ -131,7 +187,7 @@ export function createClaudeResponseWindow(payload: ClaudeResponsePayload): Prom
 
 // [#] COMMON
 
-function openWindow(window: BrowserWindow, onLoad: () => void, startHidden: boolean = false): Promise<BrowserWindow> {
+function openWindow(window: BrowserWindow, onLoad: () => void = () => {}, startHidden: boolean = false): Promise<BrowserWindow> {
   window.loadURL(
     isDev
       ? 'http://localhost:3000'
