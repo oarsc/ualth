@@ -7,7 +7,7 @@ import isDev from 'electron-is-dev';
 import { config, error as loadError }  from './back/config-load';
 
 //const { config : { defaultHotkey }, error: loadError } = require('./back/config-load');
-import { perform, match, resolve, historyString, removeHistory } from './back/action-performer';
+import { perform, match, resolve, historyString, removeHistory, hideCommand } from './back/action-performer';
 
 const DIMENSIONS = [800, 50];
 
@@ -108,6 +108,7 @@ app.whenReady().then(() => {
 	ipcMain.on('hide',          (event) => { win.minimize(); win.hide(); });
 	ipcMain.on('height',        (event, arg) => win.setSize(DIMENSIONS[0], arg));
 	ipcMain.on('removeHistory', (event, arg) => removeHistory(arg));
+	ipcMain.on('hideCommand',   (event, arg) => hideCommand(arg));
 	ipcMain.on('perform',       (event, arg, param1, param2, param3) => event.returnValue = perform(arg, param1, param2, param3));
 	ipcMain.on('resolve',       (event, arg) => event.returnValue = resolve(arg));
 	ipcMain.on('find',          (event, arg) => event.returnValue = match(arg));

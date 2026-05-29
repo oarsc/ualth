@@ -5,6 +5,7 @@ import Config from './models/config.model';
 
 import commandLoader from './command/loader';
 import Command from './command/command';
+import { clearCommands } from './services/hidder-service';
 
 const CONFIG_PATH = join(homedir(), '.ualthrc');
 
@@ -28,6 +29,7 @@ if (fs.existsSync(CONFIG_PATH)) {
   try {
     config_ = JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf-8'));
     commands_ = commandLoader(config_!);
+    clearCommands(commands_);
     Command.setParams(config_!, commands_);
   } catch (e) {
     error_ = e as Error;

@@ -10,13 +10,13 @@ interface InputLauncherProperties {
   clearItems: (hide?: boolean) => void,
   findAndSelectNextItem: () => Command | undefined,
   findAndSelectPrevItem: () => Command | undefined,
-  onSubmitForm: (inputText: string, blobs: Record<string, string | FileBlob>, ev: Event, keepHistory: boolean) => void,
+  onSubmitForm: (inputText: string, blobs: Record<string, string | FileBlob>, keepHistory: boolean) => void,
+  hideSelection: () => void,
 }
 
 interface InputLauncherState { }
 
 export default class InputLauncher extends React.Component<InputLauncherProperties, InputLauncherState> {
-
   input!: HTMLInputElement;
   historyIndex = -1;
   blobs: Record<string, string | FileBlob> = {};
@@ -45,7 +45,6 @@ export default class InputLauncher extends React.Component<InputLauncherProperti
       ev.preventDefault();
 
       if (ev.shiftKey) {
-
         if (ev.code === 'ArrowUp') {
 
           let value = this.input.value;
@@ -123,6 +122,9 @@ export default class InputLauncher extends React.Component<InputLauncherProperti
           this.props.clearItems();
         }
       }
+    } else if (ev.ctrlKey && ev.code === 'Delete') {
+      this.props.hideSelection();
+
     } else if (ev.key.length === 1 && !ev.ctrlKey) {
       this.historyIndex = -1;
       const { selectionStart, selectionEnd, value } = this.input;
@@ -211,7 +213,8 @@ export default class InputLauncher extends React.Component<InputLauncherProperti
       .filter(([key, _]) => text.indexOf(key) >= 0)
       .reduce((obj, [key, val]) => { obj[key] = val; return obj;}, {} as Record<string, string | FileBlob>);
 
-    this.props.onSubmitForm(text, existingBlobs, event, keepHistory);
+    event.preventDefault();
+    this.props.onSubmitForm(text, existingBlobs, keepHistory);
 
     this.blobs = {};
   }

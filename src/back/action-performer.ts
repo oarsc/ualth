@@ -2,6 +2,7 @@ import { config, commands } from './config-load';
 import { PriorizedSearchResult, SearchLevel, HistoryElement, FileBlob } from '../shared-models/models';
 import { saveHistory, searchHistory, getHistoryString, removeHistoryByIndex } from './services/history-service';
 import { sortSearchResults } from './services/search-service';
+import { addHidden } from './services/hidder-service';
 
 export function match(inputText: string): PriorizedSearchResult[] {
   const matches = commands
@@ -33,7 +34,7 @@ export function match(inputText: string): PriorizedSearchResult[] {
 }
 
 export function perform(id: string, input: string, blobs: Record<string, string | FileBlob>, keepHistory: boolean) {
-  const [ command ] = commands.filter(command => command.id === id);
+  const command = commands.find(command => command.id === id);
 
   if (command) {
     const [text, fileBlobs] = resolveTextBlob(input, blobs);
@@ -82,4 +83,13 @@ export function historyString(offset: number, forward: boolean, preString: strin
 
 export function removeHistory(index: number) {
   return removeHistoryByIndex(index);
+}
+
+export function hideCommand(id: string) {
+  const idx = commands.findIndex(command => command.id === id);
+  const command = commands[idx];
+  if (command && command.id) {
+    addHidden(command);
+    commands.splice(idx, 1);
+  }
 }

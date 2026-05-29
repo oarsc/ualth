@@ -102,12 +102,19 @@ export default class App extends React.Component<AppProperties, AppState> {
     }
   }
 
-  onSubmitForm = (inputText: string, blobs: Record<string, string | FileBlob>, ev: Event, keepHistory: boolean) => {
-    ev.preventDefault();
-
+  onSubmitForm = (inputText: string, blobs: Record<string, string | FileBlob>, keepHistory: boolean) => {
     const { results, resultSelected } = this.state;
     const result = ipcRenderer.sendSync('perform', results[resultSelected].command.id, inputText, blobs, keepHistory);
     if (result) this.hide();
+  }
+
+  hideSelection = () => {
+    const { results, resultSelected } = this.state;
+    ipcRenderer.send('hideCommand', results[resultSelected].command.id);
+
+    results.splice(resultSelected, 1);
+    this.resizeWindow(results.length);
+    this.setState({ results, resultSelected: results.length > 0? Math.max(resultSelected - 1, 0) : -1 });
   }
 
   override render(): JSX.Element {
@@ -122,7 +129,8 @@ export default class App extends React.Component<AppProperties, AppState> {
           clearItems={ this.clearItems }
           findAndSelectNextItem={ this.selectNext }
           findAndSelectPrevItem={ this.selectPrev }
-          onSubmitForm={ this.onSubmitForm } />
+          onSubmitForm={ this.onSubmitForm }
+          hideSelection={ this.hideSelection } />
 
         <ItemList
           hideApp={ this.hide }
