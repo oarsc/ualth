@@ -1,5 +1,5 @@
 import React from 'react';
-import './CaptureOverlay.scss';
+import './capture-overlay.scss';
 
 const ipcRenderer = window.ipcRenderer;
 

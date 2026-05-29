@@ -21,18 +21,18 @@ async function initialize(mode: string) {
       ReactDOM.render(<Loading/>, document.getElementById('root'));
       break;
 
-    case 'capture':
-      const { default: CaptureOverlay } = await import('./front/component/capture/CaptureOverlay');
-
-      window.ipcRenderer.receive('set-image', (imageUrl: string) => {
-        ReactDOM.render(<CaptureOverlay imageUrl={imageUrl} />, document.getElementById('root'));
-      });
-      break;
-
     case 'claude-response':
       const { default: ClaudeResponse } = await import('./front/component/claude-response/claude-response');
 
       ReactDOM.render(<ClaudeResponse />, document.getElementById('root'));
+      break;
+
+    case 'capture':
+      const { default: CaptureOverlay } = await import('./front/component/capture/capture-overlay');
+
+      window.ipcRenderer.receive('set-image', (imageUrl: string) => {
+        ReactDOM.render(<CaptureOverlay imageUrl={imageUrl} />, document.getElementById('root'));
+      });
       break;
 
     default:
