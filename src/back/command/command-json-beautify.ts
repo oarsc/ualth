@@ -2,6 +2,7 @@ import { FileBlob } from '../../shared-models/models';
 import { JsonBeautifyConfig, JsonBeautifyConfigElement } from "../models/config.model";
 import { clipboard } from 'electron';
 import Command from './command';
+import { createNotificationWindow } from '../../window-manager';
 
 export default class JsonBeautifyCommand extends Command {
   static label = 'json';
@@ -66,7 +67,13 @@ export default class JsonBeautifyCommand extends Command {
           );
         }
         return true;
-      } catch (e) {}
+      } catch (e) {
+        createNotificationWindow({
+          title: "JSON Parser",
+          body: "An error occurred. Please, check the input and try again.",
+          severity: "error"
+        });
+      }
       return false;
   }
 }

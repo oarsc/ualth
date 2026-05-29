@@ -31,20 +31,21 @@ export function createCaptureWindow(nativeImage: NativeImage, width: number, hei
 
 // [#] NOTIFICATION WINDOW
 
-const NOTIFICATION_WIDTH = 320;
-const NOTIFICATION_HEIGHT = 90;
+const NOTIFICATION_WIDTH = 500;
+const NOTIFICATION_HEIGHT = 70;
 const NOTIFICATION_MARGIN = 20;
+const NOTIFICATION_BOTTOM_MARGIN = 50;
 
 const activeNotificationWindows: BrowserWindow[] = [];
 
 function computeNotificationY(index: number): number {
   const { bounds } = screen.getPrimaryDisplay();
-  return bounds.y + bounds.height - NOTIFICATION_HEIGHT - NOTIFICATION_MARGIN - index * (NOTIFICATION_HEIGHT + NOTIFICATION_MARGIN);
+  return bounds.y + bounds.height - NOTIFICATION_HEIGHT - NOTIFICATION_BOTTOM_MARGIN - index * (NOTIFICATION_HEIGHT + NOTIFICATION_MARGIN);
 }
 
 function reflowNotificationWindows(): void {
   const { bounds } = screen.getPrimaryDisplay();
-  const x = bounds.x + bounds.width - NOTIFICATION_WIDTH - NOTIFICATION_MARGIN;
+  const x = bounds.x + bounds.width - NOTIFICATION_WIDTH;
   activeNotificationWindows.forEach((win, i) => {
     win.setPosition(x, computeNotificationY(i));
   });
@@ -52,7 +53,7 @@ function reflowNotificationWindows(): void {
 
 export function createNotificationWindow(payload: NotificationPayload): Promise<BrowserWindow> {
   const { bounds } = screen.getPrimaryDisplay();
-  const x = bounds.x + bounds.width - NOTIFICATION_WIDTH - NOTIFICATION_MARGIN;
+  const x = bounds.x + bounds.width - NOTIFICATION_WIDTH;
   const index = activeNotificationWindows.length;
   const y = computeNotificationY(index);
 

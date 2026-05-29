@@ -12,7 +12,7 @@ contextBridge.exposeInMainWorld(
 contextBridge.exposeInMainWorld(
 	'ipcRenderer', {
 		send: (channel: string, ...data: any[]) => {
-			const validChannels = ['hide', 'height', 'removeHistory', 'pick-color', 'close-window'];
+			const validChannels = ['hide', 'height', 'removeHistory', 'pick-color', 'close-window', 'set-ignore-mouse-events'];
 			if (validChannels.includes(channel)) {
 				ipcRenderer.send(channel, ...data);
 			}

@@ -9,6 +9,7 @@ interface NotificationState {
   body: string,
   severity: 'info' | 'success' | 'warning' | 'error',
   duration: number,
+  hidden: boolean,
 }
 
 export default class Notification extends React.Component<NotificationProperties, NotificationState> {
@@ -21,6 +22,7 @@ export default class Notification extends React.Component<NotificationProperties
       body: '',
       severity: 'info',
       duration: 3000,
+      hidden: true
     };
 
     window.ipcRenderer.receive('show-notification', (payload: NotificationPayload) => {
@@ -28,7 +30,7 @@ export default class Notification extends React.Component<NotificationProperties
         title: payload.title,
         body: payload.body,
         severity: payload.severity ?? 'info',
-        duration: payload.duration ?? 3000,
+        duration: payload.duration ?? 3000 * 1,
       });
     });
   }
@@ -36,6 +38,12 @@ export default class Notification extends React.Component<NotificationProperties
   override componentDidUpdate(_prevProps: NotificationProperties, prevState: NotificationState) {
     if (!prevState.body && this.state.body) {
       this.dismissTimer = setTimeout(() => this.dismiss(), this.state.duration);
+
+      requestAnimationFrame(() =>
+        requestAnimationFrame(() =>
+          this.setState({ hidden: false })
+        )
+      );
     }
   }
 
@@ -48,7 +56,9 @@ export default class Notification extends React.Component<NotificationProperties
       clearTimeout(this.dismissTimer);
       this.dismissTimer = null;
     }
-    window.ipcRenderer.send('close-window');
+
+    this.setState({ hidden: true })
+    setTimeout(() => window.ipcRenderer.send('close-window'), 400)
   };
 
   override render() {
@@ -57,7 +67,7 @@ export default class Notification extends React.Component<NotificationProperties
 
     return (
       <div
-        className={`notification notification--${ this.state.severity }`}
+        className={`notification notification--${ this.state.severity }${ this.state.hidden? ' hidden': '' }`}
         onClick={this.dismiss}
       >
         <div className="notification__title">{ this.state.title }</div>

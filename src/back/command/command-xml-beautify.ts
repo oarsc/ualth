@@ -2,6 +2,7 @@ import { FileBlob } from '../../shared-models/models';
 import { XmlBeautifyConfig, XmlBeautifyConfigElement } from "../models/config.model";
 import { clipboard } from 'electron';
 import Command from './command';
+import { createNotificationWindow } from '../../window-manager';
 const xmlBeautify = new (require('xml-beautify'))({ parser: require('xmldom').DOMParser });
 
 
@@ -68,7 +69,13 @@ export default class XmlBeautifyCommand extends Command {
           );
         }
         return true;
-      } catch (e) {}
+      } catch (e) {
+        createNotificationWindow({
+          title: "XML Parser",
+          body: "An error occurred. Please, check the input and try again.",
+          severity: "error"
+        });
+      }
       return false;
   }
 }

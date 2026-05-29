@@ -122,6 +122,10 @@ app.whenReady().then(() => {
 		clipboard.writeText(colorValue);
 		BrowserWindow.fromWebContents(event.sender)?.destroy();
 	});
+
+	ipcMain.on('set-ignore-mouse-events', (event, ignore, options) => {
+		BrowserWindow.fromWebContents(event.sender)?.setIgnoreMouseEvents(ignore, options)
+	})
 });
 
 // Quit when all windows are closed, except on macOS. There, it's common
