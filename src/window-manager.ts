@@ -6,8 +6,7 @@ import { ClaudeResponsePayload, NotificationPayload } from './shared-models/mode
 
 // [#] LOADING WINDOW
 
-const LOADING_WIDTH = 75;
-const LOADING_HEIGHT = 75;
+const LOADING_SIZE = 85;
 const LOADING_RIGHT_MARGIN = 50;
 const LOADING_BOTTOM_MARGIN = 50;
 
@@ -21,13 +20,13 @@ export function createLoadingWindow(): Promise<BrowserWindow> {
   }
 
   const { bounds } = screen.getPrimaryDisplay();
-  const x = bounds.x + bounds.width - LOADING_WIDTH - LOADING_RIGHT_MARGIN;
-  const y = bounds.y + bounds.height - LOADING_HEIGHT - LOADING_BOTTOM_MARGIN;
+  const x = bounds.x + bounds.width - LOADING_SIZE - LOADING_RIGHT_MARGIN;
+  const y = bounds.y + bounds.height - LOADING_SIZE - LOADING_BOTTOM_MARGIN;
 
   loadingCount = 1;
   activeLoadingWindow = new BrowserWindow({
-    width: LOADING_WIDTH,
-    height: LOADING_HEIGHT,
+    width: LOADING_SIZE,
+    height: LOADING_SIZE,
     x,
     y,
     frame: false,
@@ -53,9 +52,13 @@ export function createLoadingWindow(): Promise<BrowserWindow> {
 
 export function stopLoadingWindow() {
   if (activeLoadingWindow && (--loadingCount <= 0)) {
-    activeLoadingWindow.destroy();
-    activeLoadingWindow = undefined;
-    loadingCount = 0;
+    activeLoadingWindow.webContents.send('stop-loading');
+
+    activeLoadingWindow.on('closed', () => {
+      activeLoadingWindow?.destroy();
+      activeLoadingWindow = undefined;
+      loadingCount = 0;
+    });
   }
 }
 

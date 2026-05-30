@@ -1,3 +1,4 @@
+
 * {
   margin: 0;
   padding: 0;
@@ -9,49 +10,85 @@ body {
 }
 
 #loading-container {
-  width: 75px;
-  height: 75px;
-  position: relative;
+  position: fixed;
+  inset: 0;
 
-  /* centrar opcional */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: #000000BF;
+  border-radius: 4px;
+  transition: opacity 0.5s;
+  opacity: 1;
+
+  &.hidden {
+    opacity: 0;
+  }
+}
+
+#centered {
+  width: 60px;
+  height: 60px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+$ring-width: 9px;
+
+.loader {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
+  max-width: 6rem;
+  margin-top: 3rem;
+  margin-bottom: 3rem;
 
-  background: #22222290;
-  border-radius: 7px;
+  &:before,
+  &:after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    animation: pulsOut 1.5s -0.75s ease-in-out infinite;
+    filter: drop-shadow(0 0 $ring-width rgba(255, 255, 255, 0.85));
+  }
+
+  &:before {
+    width: 100%;
+    padding-bottom: 100%;
+    animation-name: pulsIn;
+  }
+
+  &:after {
+    width: calc(100% - #{$ring-width * 2});
+    padding-bottom: calc(100% - #{$ring-width * 2});
+  }
 }
 
-/* bloques */
-.block {
-  width: 15px;
-  height: 15px;
-  position: absolute;
-  border-radius: 4px;
-  background-color: white;
-}
-
-/* animación base de órbita */
-@keyframes orbit {
+@keyframes pulsIn {
   0% {
-    transform: rotate(0deg) translateX(18px) rotate(0deg);
+    box-shadow: inset 0 0 0 $ring-width #fff;
+    opacity: 1;
   }
+
+  50%, 100% {
+    box-shadow: inset 0 0 0 0 #fff;
+    opacity: 0;
+  }
+}
+
+@keyframes pulsOut {
+  0%, 50% {
+    box-shadow: 0 0 0 0 #fff;
+    opacity: 0;
+  }
+
   100% {
-    transform: rotate(360deg) translateX(18px) rotate(-360deg);
+    box-shadow: 0 0 0 $ring-width #fff;
+    opacity: 1;
   }
-}
-
-/* cada bloque con delay para separación */
-#element-1 {
-  animation: orbit 1.2s linear infinite;
-}
-
-#element-2 {
-  animation: orbit 1.2s linear infinite;
-  animation-delay: -0.4s;
-}
-
-#element-3 {
-  animation: orbit 1.2s linear infinite;
-  animation-delay: -0.8s;
 }
