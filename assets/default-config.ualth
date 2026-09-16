@@ -1,5 +1,9 @@
 {
-	"defaultHotkey": "Alt+Space",
+	"activation": {
+		"mode": "hotkey",
+		"hotkey": "Alt+Space",
+		"pipePath": "/tmp/ualth.pipe"
+	},
 	"default": {
 		"command": "xdg-open",
 		"textEditorCommand": "subl"

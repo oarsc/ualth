@@ -4,10 +4,9 @@ import isDev from 'electron-is-dev';
 // TODO: include the dev tools installer to load React Dev Tools?
 //import { default as installExtension, REACT_DEVELOPER_TOOLS } from 'electron-devtools-installer';
 
-import { config, error as loadError }  from './back/config-load';
-
-//const { config : { defaultHotkey }, error: loadError } = require('./back/config-load');
+import { config, error as loadError } from './back/config-load';
 import { perform, match, resolve, historyString, removeHistory, hideCommand } from './back/action-performer';
+import { listenPipe } from './back/services/pipe-listener-service';
 
 const DIMENSIONS = [800, 50];
 
@@ -74,7 +73,7 @@ app.whenReady().then(() => {
 	win.minimize();
 	win.hide();
 
-	globalShortcut.register(config?.defaultHotkey ?? 'Alt+Space', () => {
+	function activateWindow(): void {
 		win.show();
 		win.webContents.send('show');
 
@@ -85,15 +84,15 @@ app.whenReady().then(() => {
 			const width = DIMENSIONS[0] = (config?.style?.width ?? 800) < 0
 				? primaryDisplay.bounds.width
 				: (config?.style?.width ?? 800);
-	
+
 			const x = (config?.style?.left ?? -1) < 0
 				? (primaryDisplay.bounds.width - DIMENSIONS[0]) / 2 
 				: config?.style?.left ?? 0;
-	
+
 			const y = (config?.style?.top ?? -1) < 0
 				? (primaryDisplay.bounds.height - DIMENSIONS[1]) / 2 - 200
 				: config?.style?.top ?? 0;
-	
+
 			win.setBounds({
 				width: width,
 				height: DIMENSIONS[1],
@@ -101,7 +100,15 @@ app.whenReady().then(() => {
 				y: primaryDisplay.bounds.y + y
 			});
 		}, 10);
-	});
+	}
+
+	if (config?.activation?.mode === 'pipe') {
+		listenPipe(config?.activation?.pipePath ?? '/tmp/ualth.pipe', (message) => {
+			if (message === 'open') activateWindow();
+		});
+	} else {
+		globalShortcut.register(config?.activation?.hotkey ?? 'Alt+Space', activateWindow);
+	}
 
 	win.on('blur', () => win.webContents.send('blur'));
 

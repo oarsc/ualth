@@ -5,6 +5,12 @@ export interface DefaultConfig {
   textEditorCommand: string   // program to open text files with
 }
 
+export interface ActivationConfig {
+  mode: 'hotkey' | 'pipe',
+  hotkey?: string,
+  pipePath?: string
+}
+
 export interface InternalCommandsConfig {
   exit: string,
   reload: string,
@@ -110,7 +116,7 @@ export interface CommandRunConfig {
 }
 
 export default interface Config {
-  defaultHotkey: string,
+  activation?: ActivationConfig,
   default: DefaultConfig,
   style?: StyleConfig,
   resolve: Record<string, string>,
