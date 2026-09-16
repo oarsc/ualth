@@ -53,7 +53,19 @@ export default class XmlBeautifyCommand extends Command {
     }
 
     if (argsList.length) {
-      this.resolve(argsList.join(' '));
+      if (this.resolve(argsList.join(' '))) {
+        createNotificationWindow({
+          title: "XML Parser",
+          body: "Successfully processed XML. It has been added to your clipboard.",
+          severity: "success"
+        });
+      } else {
+        createNotificationWindow({
+          title: "XML Parser",
+          body: "An error occurred. Please, check the input and try again.",
+          severity: "error"
+        });
+      };
     }
   }
 
@@ -69,13 +81,7 @@ export default class XmlBeautifyCommand extends Command {
           );
         }
         return true;
-      } catch (e) {
-        createNotificationWindow({
-          title: "XML Parser",
-          body: "An error occurred. Please, check the input and try again.",
-          severity: "error"
-        });
-      }
+      } catch (e) { }
       return false;
   }
 }

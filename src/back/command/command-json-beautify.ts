@@ -51,7 +51,19 @@ export default class JsonBeautifyCommand extends Command {
     }
 
     if (argsList.length) {
-      this.resolve(argsList.join(' '));
+      if (this.resolve(argsList.join(' '))) {
+        createNotificationWindow({
+          title: "JSON Parser",
+          body: "Successfully processed JSON. It has been added to your clipboard.",
+          severity: "success"
+        });
+      } else {
+        createNotificationWindow({
+          title: "JSON Parser",
+          body: "An error occurred. Please, check the input and try again.",
+          severity: "error"
+        });
+      };
     }
   }
 
@@ -67,13 +79,7 @@ export default class JsonBeautifyCommand extends Command {
           );
         }
         return true;
-      } catch (e) {
-        createNotificationWindow({
-          title: "JSON Parser",
-          body: "An error occurred. Please, check the input and try again.",
-          severity: "error"
-        });
-      }
+      } catch (e) { }
       return false;
   }
 }
