@@ -248,6 +248,9 @@ export default class InputLauncher extends React.Component<InputLauncherProperti
             onPaste={ this.onPaste }
             ref={ input => this.input = input! } />
         </div>
+        <div className='pin-icon'>
+          <img src='img/pin.svg'/>
+        </div>
       </form>
     );
   }

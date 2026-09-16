@@ -4,9 +4,10 @@ $background: var(--background, #333);
 $iconColor: var(--icon-color, $background);
 
 #launcher-input {
+  position: relative;
   background-color: $background;
   border-radius: $radius;
-  
+
   border: 0;
   height: $inputHeight;
   background-color: $iconColor;
@@ -32,6 +33,23 @@ $iconColor: var(--icon-color, $background);
   > div {
     border-radius: $radius $radius 0 0;
   }
+}
+
+#launcher-input .pin-icon {
+  display: none;
+  position: absolute;
+  top: 0;
+  right: 15px;
+  height: $inputHeight;
+  align-items: center;
+}
+
+#launcher-input .pin-icon img {
+  width: 20px;
+}
+
+.pinned #launcher-input .pin-icon {
+  display: flex;
 }
 
 #launcher-input .icon {

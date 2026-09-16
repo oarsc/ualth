@@ -14,9 +14,12 @@ interface AppState {
   visible: boolean,
   results: PriorizedSearchResult[],
   resultSelected: number,
+  pinned: boolean,
 }
 
 export default class App extends React.Component<AppProperties, AppState> {
+  private altHeldAlone = false;
+
   constructor(props: AppProperties) {
     super(props);
 
@@ -24,6 +27,7 @@ export default class App extends React.Component<AppProperties, AppState> {
       visible: false,
       results: [],
       resultSelected: -1,
+      pinned: false,
     };
 
     ipcRenderer.receive('show', () => {
@@ -32,12 +36,35 @@ export default class App extends React.Component<AppProperties, AppState> {
           visible: true,
           results: [],
           resultSelected: -1,
+          pinned: false,
         });
         this.resizeWindow(0);
       }
     });
 
-    ipcRenderer.receive('blur', this.hide);
+    ipcRenderer.receive('blur', this.onBlur);
+
+    window.addEventListener('keydown', this.onWindowKeyDown);
+    window.addEventListener('keyup', this.onWindowKeyUp);
+  }
+
+  private onWindowKeyDown = (ev: KeyboardEvent) => {
+    if (ev.key === 'Alt') {
+      if (!ev.repeat) this.altHeldAlone = true;
+    } else {
+      this.altHeldAlone = false;
+    }
+  }
+
+  private onWindowKeyUp = (ev: KeyboardEvent) => {
+    if (ev.key === 'Alt' && this.altHeldAlone) {
+      this.altHeldAlone = false;
+      this.setState(prevState => ({ pinned: !prevState.pinned }));
+    }
+  }
+
+  private onBlur = () => {
+    if (!this.state.pinned) this.hide();
   }
 
   resizeWindow(numItems: number) {
@@ -57,7 +84,8 @@ export default class App extends React.Component<AppProperties, AppState> {
       this.setState({
         results: [],
         resultSelected: -1,
-        visible: false
+        visible: false,
+        pinned: false,
       });
     } else {
       this.setState({
@@ -122,7 +150,7 @@ export default class App extends React.Component<AppProperties, AppState> {
       return <div/>;
 
     return (
-      <div id="app" className={ classNames('itemed', this.state.results.length > 0) }>
+      <div id="app" className={ classNames(['itemed', 'pinned'], [this.state.results.length > 0, this.state.pinned]) }>
         <InputLauncher
           hideApp={ this.hide }
           loadItems={ this.loadItems }
