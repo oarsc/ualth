@@ -40,7 +40,13 @@ export interface ColorConfig {
 }
 
 export interface ClaudeConfig {
-  key: string
+  key: string,
+  env?: Record<string, string>
+}
+
+export interface DevinConfig {
+  key: string,
+  env?: Record<string, string>
 }
 
 export interface DebugConfig {
@@ -126,6 +132,7 @@ export default interface Config {
   copy?: CopyConfig,
   color?: ColorConfig,
   claude?: ClaudeConfig,
+  devin?: DevinConfig,
   debug?: DebugConfig,
   unixApps?: string[],
   windowsApps: string[],

@@ -11,6 +11,7 @@ import CopyCommand from "./command-copy";
 import UuidCommand from "./command-uuid";
 import ColorCommand from "./command-color";
 import ClaudeCommand from "./command-claude";
+import DevinCommand from "./command-devin";
 import DebugCommand from "./command-dev-debug";
 import UnixAppsCommand from "./command-unix-apps";
 import WindowsStartAppsCommand from "./command-windows-start-apps";
@@ -32,6 +33,7 @@ const commandsClasses = [
   UuidCommand,
   ColorCommand,
   ClaudeCommand,
+  DevinCommand,
   DebugCommand,
   UnixAppsCommand,
   WindowsStartAppsCommand,

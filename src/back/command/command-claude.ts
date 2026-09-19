@@ -11,6 +11,8 @@ export default class ClaudeCommand extends Command {
   static label = 'claude';
   static path = '';
 
+  private env: Record<string, string>;
+
   constructor(data: ClaudeConfig) {
     super('ClaudeCommand');
     this.caseInsensitive = true;
@@ -20,6 +22,7 @@ export default class ClaudeCommand extends Command {
 
     this.title = "Claude query";
     this.keyWord = data.key;
+    this.env = data.env || {};
     this.generateId();
   }
 
@@ -51,8 +54,7 @@ export default class ClaudeCommand extends Command {
         stdio: ["ignore", "pipe", "pipe"],
         env: {
           ...process.env,
-          HTTP_PROXY: "http://127.0.0.1:9000",
-          HTTPS_PROXY: "http://127.0.0.1:9000",
+          ...this.env,
         },
       }
     );
