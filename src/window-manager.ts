@@ -197,7 +197,6 @@ function openWindow(window: BrowserWindow, onLoad: () => void = () => {}, startH
       : `file://${join(__dirname, '../build/index.html')}`
   );
   if (startHidden) {
-    window.minimize();
     window.hide();
   }
 

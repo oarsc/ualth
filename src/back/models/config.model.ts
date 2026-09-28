@@ -1,5 +1,9 @@
 import { StyleConfig } from "../../shared-models/models"
 
+export interface AppConfig {
+  resize: boolean
+}
+
 export interface DefaultConfig {
   command: string,            // execute program
   textEditorCommand: string   // program to open text files with
@@ -122,6 +126,7 @@ export interface CommandRunConfig {
 }
 
 export default interface Config {
+  config: AppConfig,
   activation?: ActivationConfig,
   default: DefaultConfig,
   style?: StyleConfig,

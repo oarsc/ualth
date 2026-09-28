@@ -9,7 +9,9 @@ export function listenPipe(pipePath: string, onMessage: (message: string) => voi
 }
 
 function ensureFifo(pipePath: string) {
-  if (fs.existsSync(pipePath)) return;
+  if (fs.existsSync(pipePath)) {
+    fs.unlinkSync(pipePath);
+  }
 
   try {
     execFileSync('mkfifo', [pipePath], {

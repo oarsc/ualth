@@ -3,7 +3,7 @@ import InputLauncher from './launcher-input';
 import ItemList from './item-list';
 import { classNames } from './support';
 import { getNumVisibleItems, INPUT_HEIGHT, ITEM_HEIGHT } from './constants-conf';
-import './app.css';
+import './app.scss';
 import { Command, PriorizedSearchResult, FileBlob } from '../shared-models/models';
 
 const ipcRenderer = window.ipcRenderer;

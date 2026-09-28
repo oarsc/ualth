@@ -8,7 +8,11 @@ import { config, error as loadError } from './back/config-load';
 import { perform, match, resolve, historyString, removeHistory, hideCommand } from './back/action-performer';
 import { listenPipe } from './back/services/pipe-listener-service';
 
-const DIMENSIONS = [800, 50];
+const ENABLE_RESIZE = config?.config?.resize != false
+
+const DIMENSIONS = ENABLE_RESIZE
+	? [1000, 50]
+	: [1000, 51 + 46 * (config?.style?.results ?? 0)]
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling
 if (require("electron-squirrel-startup")) {
@@ -70,14 +74,13 @@ app.whenReady().then(() => {
 	}
 
 	const win = createWindow();
-	win.minimize();
 	win.hide();
 
 	function activateWindow(): void {
 		win.show();
 		win.webContents.send('show');
 
-		setTimeout(() => {
+		//setTimeout(() => {
 			const winBounds = win.getBounds();
 			const primaryDisplay = screen.getDisplayNearestPoint({x: winBounds.x, y: winBounds.y});
 
@@ -89,8 +92,9 @@ app.whenReady().then(() => {
 				? (primaryDisplay.bounds.width - DIMENSIONS[0]) / 2 
 				: config?.style?.left ?? 0;
 
+			const centerHeight = ENABLE_RESIZE? DIMENSIONS[1] : 50;
 			const y = (config?.style?.top ?? -1) < 0
-				? (primaryDisplay.bounds.height - DIMENSIONS[1]) / 2 - 200
+				? (primaryDisplay.bounds.height - centerHeight) / 2 - 200
 				: config?.style?.top ?? 0;
 
 			win.setBounds({
@@ -99,7 +103,7 @@ app.whenReady().then(() => {
 				x: primaryDisplay.bounds.x + x,
 				y: primaryDisplay.bounds.y + y
 			});
-		}, 10);
+		//}, 10);
 	}
 
 	if (config?.activation?.mode === 'pipe') {
@@ -112,8 +116,17 @@ app.whenReady().then(() => {
 
 	win.on('blur', () => win.webContents.send('blur'));
 
-	ipcMain.on('hide',          (event) => { win.minimize(); win.hide(); });
-	ipcMain.on('height',        (event, arg) => win.setSize(DIMENSIONS[0], arg));
+	ipcMain.on('hide',          (event) => { win.hide(); });
+	ipcMain.on('height',        (event, arg) => {
+		if (ENABLE_RESIZE) {
+			const [x,y] = win.getPosition();
+			win.setBounds({
+				x,y,
+				width: DIMENSIONS[0],
+				height: arg,
+			});
+		}
+	});
 	ipcMain.on('removeHistory', (event, arg) => removeHistory(arg));
 	ipcMain.on('hideCommand',   (event, arg) => hideCommand(arg));
 	ipcMain.on('perform',       (event, arg, param1, param2, param3) => event.returnValue = perform(arg, param1, param2, param3));
@@ -141,4 +154,8 @@ app.whenReady().then(() => {
 // explicitly with Cmd + Q.
 app.on("window-all-closed", () => {
 	app.quit();
+});
+
+app.once('will-quit', (e) => {
+  process.kill(process.pid, 'SIGKILL');
 });
